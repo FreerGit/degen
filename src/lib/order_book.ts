@@ -1,14 +1,16 @@
-enum Side {
-  Buy,
-  Sell
+import type { Level } from './bybit/order_book';
+import type { Updates } from './types';
+
+abstract class OrderBook {
+	asks: Array<Level>;
+	bids: Array<Level>;
+
+	constructor() {
+		this.asks = [];
+		this.bids = [];
+	}
+
+	abstract update_delta(updates: Updates): void;
 }
 
-type Level = {
-  price: number,
-  symbol: string,
-  side: Side,
-  size: number
-}
-
-
-export type {Level, Side}
+export { OrderBook };
