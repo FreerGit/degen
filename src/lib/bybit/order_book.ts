@@ -20,12 +20,16 @@ type DeleteLevel = {
 class BybitBook extends OrderBook {
 	constructor() {
 		super();
+		this.market = "BTCUSDT";
+		this.full_market_name = "bybit/" + this.market;
 	}
 
 	update_delta(updates: Updates): void {
 		this.delete(updates.delete);
 		this.insert(updates.insert);
 		this.update(updates.update);
+		this.delta = 
+			(this.bids.reduce((a, b) => a + b.size, 0) - this.asks.reduce((a, b) => a + b.size, 0))
 	}
 
 	delete(to_delete: Array<DeleteLevel>): void {
