@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"ts-pattern": "^4.1.4",
 		"ws": "^8.11.0"
 	}
 }

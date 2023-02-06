@@ -1,6 +1,6 @@
-import type { DeleteLevel, Level } from './bybit/order_book';
+import type { DeleteLevel, Level, Side } from './bybit/order_book';
 
-type Payload = Snapshot | Delta;
+type Payload = Snapshot | Delta | Trades;
 
 type Snapshot = {
 	topic: string;
@@ -28,4 +28,20 @@ type Updates = {
 	insert: Array<Level>;
 };
 
-export type { Payload, Delta, Snapshot, Updates };
+type Direction = "PlusTick" | "MinusTick " | "ZeroMinusTick" | "ZeroPlusTick"
+
+type Trades = {
+	topic: string;
+	data: Array<Trade>;
+}
+
+type Trade = {
+	symbol: string;
+	tick_direction: Direction;
+	price: number;
+	size: number;
+	trade_time_ms: number;
+	side: Side;
+}
+
+export type { Payload, Delta, Snapshot, Updates, Trades };
