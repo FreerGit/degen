@@ -7,29 +7,12 @@ const binary_search = (curr: Array<Level>, val: Level) => {
 		}
 	}
 	return -1;
-	// let start = 0;
-	// let end = curr.length - 1;
-	// if (end == -1) {
-	//   return -1;
-	// }
-	// while (start <= end) {
-	//   const middle = Math.floor((start + end) / 2);
-	//   if (curr[middle].price === val.price) {
-	// 		return middle;
-	// 	} else if (curr[middle].price > val.price) {
-	// 		start = middle + 1;
-	// 	} else {
-	// 		end = middle - 1;
-	// 	}
-	// }
-	// return -1;
 };
 
 export const sorted_update = (curr: Array<Level>, val: Level) => {
 	const idx = binary_search(curr, val);
 	if (idx !== -1) {
 		curr[idx] = val;
-		// throw new Error('idx should never return -1 since level should exist.');
 	}
 };
 

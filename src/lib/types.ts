@@ -1,8 +1,8 @@
 import type { DeleteLevel, Level, Side } from './bybit/order_book';
 
-type Payload = Snapshot | Delta | Trades;
+export type Payload = Snapshot | Delta | Trades;
 
-type Snapshot = {
+export type Snapshot = {
 	topic: string;
 	type: string;
 	data: OrderBook;
@@ -10,11 +10,11 @@ type Snapshot = {
 	timestamp_e6: number;
 };
 
-type OrderBook = {
+export type OrderBook = {
 	order_book: Array<Level>;
 };
 
-type Delta = {
+export type Delta = {
 	topic: string;
 	type: string;
 	data: Updates;
@@ -22,26 +22,24 @@ type Delta = {
 	timestamp_e6: number;
 };
 
-type Updates = {
+export type Updates = {
 	delete: Array<DeleteLevel>;
 	update: Array<Level>;
 	insert: Array<Level>;
 };
 
-type Direction = "PlusTick" | "MinusTick " | "ZeroMinusTick" | "ZeroPlusTick"
+export type Direction = 'PlusTick' | 'MinusTick ' | 'ZeroMinusTick' | 'ZeroPlusTick';
 
-type Trades = {
+export type Trades = {
 	topic: string;
 	data: Array<Trade>;
-}
+};
 
-type Trade = {
+export type Trade = {
 	symbol: string;
 	tick_direction: Direction;
 	price: number;
 	size: number;
 	trade_time_ms: number;
 	side: Side;
-}
-
-export type { Payload, Delta, Snapshot, Updates, Trades };
+};

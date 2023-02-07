@@ -12,8 +12,8 @@ abstract class OrderBook {
 		this.asks = [];
 		this.bids = [];
 		this.delta = 0;
-		this.market = "";
-		this.full_market_name = "";
+		this.market = '';
+		this.full_market_name = '';
 	}
 
 	abstract update_delta(updates: Updates): void;
