@@ -2,7 +2,7 @@
 	import { BybitBook } from '$lib/bybit/order_book';
 	import { push_front, rotate_array } from '$lib/rotate_array';
 	import type { Delta, Payload, Snapshot, Trades } from '$lib/types';
-
+	import TradeFeed, { type TradeFeedOptions } from '$lib/components/trade_feed.svelte';
 	import { onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
 
@@ -13,6 +13,11 @@
 	let largest_tick = 0;
 
 	let xx = rotate_array(100);
+
+	let opt: TradeFeedOptions = {
+		max_size: 100,
+		min_size: 0.2,
+	}
 
 	onMount(() => {
 		const ws = new WebSocket(ENDPOINT);
@@ -34,14 +39,14 @@
 					bybit_book.bids = bybit_book.bids;
 				})
 				.with({ data: P.array({ tick_direction: P.string }) }, () => {
-					console.log(json);
-					xx = push_front(xx, (json as Trades).data);
-					console.log(xx.data.length);
-					// xx = xx;
+					(json as Trades).data.forEach(i => {
+						if (i.size > opt.min_size && i.size < opt.max_size) {
+							xx = push_front(xx, i);
+						}
+					})
 				})
 				.run();
 		};
-
 	});
 </script>
 
@@ -61,7 +66,7 @@
 					<tr class="w-full text-xs">
 						<td> {ask.price} </td>
 						<td>
-							<div class="bg-red-500" style="width: {(ask.size / largest_tick) * 100}%;">
+							<div class="bg-app-sell" style="width: {(ask.size / largest_tick) * 100}%;">
 								{ask.size}
 							</div>
 						</td>
@@ -72,7 +77,7 @@
 			<!-- <thead> -->
 			<tr>
 				<th class="flex" />
-				<th class="{bybit_book.delta > 0 ? 'text-green-500' : 'text-red-500'} text-xs"
+				<th class="{bybit_book.delta > 0 ? 'text-app-buy' : 'text-app-sell'} text-xs"
 					>Δ {bybit_book.delta.toFixed(3)}</th
 				>
 			</tr>
@@ -83,7 +88,7 @@
 					<tr class="w-full text-xs">
 						<td class="text-xs"> {bids.price} </td>
 						<td>
-							<div class="bg-green-500" style="width: {(bids.size / largest_tick) * 100}%;">
+							<div class="bg-app-buy" style="width: {(bids.size / largest_tick) * 100}%;">
 								{bids.size}
 							</div>
 						</td>
@@ -97,11 +102,9 @@
 	<!-- END OF COMP. -->
 
 	<!-- ONE COMPONENT L8R -->
-	<div class="flex flex-col w-40 bg-red-500 max-h-screen overflow-y-auto no-scrollbar">
-		{#each xx.data as trade}
-			<li>{trade.price} {trade.side} {trade.size}</li>
-		{/each}
-	</div>
+<TradeFeed data_feed={xx} options={opt}>
+
+</TradeFeed>
 
 	<!-- END OF COMP. -->
 </main>

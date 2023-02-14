@@ -1,2 +1,15 @@
-orderbook class should have connect and callbacks for message
-orderbook class should have name of market etc after connecting
+# Tasks
+- [ ] Options for trades feed
+- [ ] liq feed
+- [ ] options for liq feed
+- [ ] trades delta over time
+- [ ] make both feeds removeable (only bybit)
+- [ ] make both feeds addable (only bybit)
+- [ ] make order books addable (only bybit)
+- [ ] make order books removable (only bybit)
+- [ ] polish feeds
+- [ ] polish order book
+- [ ] add coinbase order books
+- [ ] add coinbase liq feed
+- [ ] add coinbase trade feed
+- [ ] make settings savable - local storage
