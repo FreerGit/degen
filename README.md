@@ -1,5 +1,9 @@
 # Tasks
+- [ ] Starting state - JSON local storage
 - [ ] Options for trades feed
+    - [ ] delete
+    - [ ] search
+    - [ ] settings
 - [ ] liq feed
 - [ ] options for liq feed
 - [ ] trades delta over time
