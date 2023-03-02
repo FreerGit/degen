@@ -15,7 +15,7 @@
 	let xx = rotate_array(100);
 
 	let opt: TradeFeedOptions = {
-		min_size: 0.1,
+		min_size: 3000,
 	}
 
 	onMount(() => {
@@ -40,7 +40,7 @@
 				.with({ data: P.array({ tick_direction: P.string }) }, () => {
 					console.log((json as Trades).topic);
 					(json as Trades).data.forEach(i => {
-						if (i.size > opt.min_size) {
+						if (i.size * i.price > opt.min_size) {
 							xx = push_front(xx, i);
 						}
 					})
