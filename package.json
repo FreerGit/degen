@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"daisyui": "^2.51.3",
 		"ts-pattern": "^4.1.4",
 		"ws": "^8.11.0"
 	}
