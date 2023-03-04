@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  export type OrderBookOptions = {
-    market: string;
-  }
+	export type OrderBookOptions = {
+		market: string;
+	};
 </script>

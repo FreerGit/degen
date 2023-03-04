@@ -4,7 +4,6 @@
 	import type { Delta, Payload, Snapshot, Trades } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
-	import type { TradeFeedOptions } from '$lib/components/trade_feed.svelte';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
 	import { layoutStore } from '$lib/stores';
 	import { browser } from '$app/environment';
@@ -17,17 +16,14 @@
 
 	let xx = rotate_array(100);
 
-	let opt: TradeFeedOptions = {
-		market: "BTCUSDT",
-		min_size: 3000,
-	}
-
-	
+	let opt = $layoutStore.trade_feed;
 
 	onMount(async () => {
 		const ws = new WebSocket(ENDPOINT);
 		ws.onopen = () => {
-			ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT"]}');
+			ws.send(
+				`{"op": "subscribe", "args": ["${$layoutStore.order_book.market}", "${$layoutStore.trade_feed.market}"]}`
+			);
 		};
 		ws.onmessage = (message) => {
 			let json: Payload = JSON.parse(message.data);
@@ -44,12 +40,11 @@
 					bybit_book.bids = bybit_book.bids;
 				})
 				.with({ data: P.array({ tick_direction: P.string }) }, () => {
-					console.log((json as Trades).topic);
-					(json as Trades).data.forEach(i => {
+					(json as Trades).data.forEach((i) => {
 						if (i.size * i.price > opt.min_size) {
 							xx = push_front(xx, i);
 						}
-					})
+					});
 				})
 				.run();
 		};
@@ -109,8 +104,7 @@
 
 	<!-- ONE COMPONENT L8R -->
 	{#if browser}
-		<TradeFeed data_feed={xx} bind:options={$layoutStore.trade_feed}/>
+		<TradeFeed data_feed={xx} bind:options={$layoutStore.trade_feed} />
 	{/if}
 	<!-- END OF COMP. -->
-
 </main>

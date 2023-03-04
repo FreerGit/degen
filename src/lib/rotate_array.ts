@@ -1,8 +1,6 @@
 import type { Trade } from './types';
 
-export class TradeFeed {
-
-}
+export class TradeFeed {}
 
 export type RotateArray = {
 	size: number;

@@ -1,11 +1,12 @@
 # Tasks
-- [ ] Starting state - JSON local storage
-    - [ ] remove dexie
-    - [ ] use local storage
+
+- [x] Starting state - JSON local storage
+  - [x] remove dexie
+  - [x] use local storage
 - [ ] Options for trades feed
-    - [ ] delete
-    - [ ] search
-    - [ ] settings
+  - [ ] delete
+  - [ ] search
+  - [ ] settings
 - [ ] liq feed
 - [ ] options for liq feed
 - [ ] trades delta over time
@@ -20,9 +21,10 @@
 - [ ] add coinbase trade feed
 - [ ] make settings savable - local storage
 
-
 ## Issues
+
 Who handles subscriptions?
 
 ## Layout
+
 Maybe resizable windows later for OB and feeds but for now just have sized windows with layout config
