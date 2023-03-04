@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
     export type TradeFeedOptions = {
+      market: string;
       min_size: number;
     }
 </script>
@@ -14,6 +15,7 @@
 
   export let data_feed: RotateArray;
   export let options: TradeFeedOptions;
+  console.log(options)
   let settings_state = false; 
 
 </script>

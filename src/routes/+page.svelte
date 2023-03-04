@@ -2,9 +2,12 @@
 	import { BybitBook } from '$lib/bybit/order_book';
 	import { push_front, rotate_array } from '$lib/rotate_array';
 	import type { Delta, Payload, Snapshot, Trades } from '$lib/types';
-	import TradeFeed, { type TradeFeedOptions } from '$lib/components/trade_feed.svelte';
 	import { onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
+	import { create_layout_store } from '$lib/stores';
+	import type { TradeFeedOptions } from '$lib/components/trade_feed.svelte';
+	import Layout from './+layout.svelte';
+	import TradeFeed from '$lib/components/trade_feed.svelte';
 
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
@@ -15,13 +18,14 @@
 	let xx = rotate_array(100);
 
 	let opt: TradeFeedOptions = {
+		market: "BTCUSDT",
 		min_size: 3000,
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		const ws = new WebSocket(ENDPOINT);
 		ws.onopen = () => {
-			ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT","trade.BTCUSDT"]}');
+			ws.send('{"op": "subscribe", "args": ["orderBookL2_25.BTCUSDT"]}');
 		};
 		ws.onmessage = (message) => {
 			let json: Payload = JSON.parse(message.data);
@@ -102,7 +106,12 @@
 	<!-- END OF COMP. -->
 
 	<!-- ONE COMPONENT L8R -->
-<TradeFeed data_feed={xx} options={opt}/>
+	{#await create_layout_store().init() then layout_store}
+		{#if layout_store && layout_store.trade_feeds !== undefined}
+			<TradeFeed data_feed={xx} options={layout_store.trade_feeds[0]}/>
+		{/if}
+	{/await}
+
 	<!-- END OF COMP. -->
 
 </main>

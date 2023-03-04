@@ -17,3 +17,10 @@
 - [ ] add coinbase liq feed
 - [ ] add coinbase trade feed
 - [ ] make settings savable - local storage
+
+
+## Issues
+Who handles subscriptions?
+
+## Layout
+Maybe resizable windows later for OB and feeds but for now just have sized windows with layout config
