@@ -1,5 +1,7 @@
 # Tasks
 - [ ] Starting state - JSON local storage
+    - [ ] remove dexie
+    - [ ] use local storage
 - [ ] Options for trades feed
     - [ ] delete
     - [ ] search

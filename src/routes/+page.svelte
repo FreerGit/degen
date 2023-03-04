@@ -4,10 +4,10 @@
 	import type { Delta, Payload, Snapshot, Trades } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
-	import { create_layout_store } from '$lib/stores';
 	import type { TradeFeedOptions } from '$lib/components/trade_feed.svelte';
-	import Layout from './+layout.svelte';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
+	import { layoutStore } from '$lib/stores';
+	import { browser } from '$app/environment';
 
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
@@ -21,6 +21,8 @@
 		market: "BTCUSDT",
 		min_size: 3000,
 	}
+
+	
 
 	onMount(async () => {
 		const ws = new WebSocket(ENDPOINT);
@@ -106,12 +108,9 @@
 	<!-- END OF COMP. -->
 
 	<!-- ONE COMPONENT L8R -->
-	{#await create_layout_store().init() then layout_store}
-		{#if layout_store && layout_store.trade_feeds !== undefined}
-			<TradeFeed data_feed={xx} options={layout_store.trade_feeds[0]}/>
-		{/if}
-	{/await}
-
+	{#if browser}
+		<TradeFeed data_feed={xx} bind:options={$layoutStore.trade_feed}/>
+	{/if}
 	<!-- END OF COMP. -->
 
 </main>
