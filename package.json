@@ -34,7 +34,6 @@
 	"type": "module",
 	"dependencies": {
 		"daisyui": "^2.51.3",
-		"dexie": "^3.2.3",
 		"ts-pattern": "^4.1.4",
 		"ws": "^8.11.0"
 	}
