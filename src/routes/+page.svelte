@@ -7,6 +7,7 @@
 	import TradeFeed from '$lib/components/trade_feed.svelte';
 	import { layoutStore } from '$lib/stores';
 	import { browser } from '$app/environment';
+	import MenuButton from '$lib/components/menu_button.svelte';
 
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
@@ -100,11 +101,11 @@
 	</div>
 
 	<div />
-	<!-- END OF COMP. -->
 
-	<!-- ONE COMPONENT L8R -->
 	{#if browser}
 		<TradeFeed data_feed={xx} bind:options={$layoutStore.trade_feed} />
 	{/if}
-	<!-- END OF COMP. -->
+
+	<MenuButton/>
+
 </main>
