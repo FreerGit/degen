@@ -23,16 +23,14 @@
 <div>
   <Modal open={isModalOpen} onClose={() => isModalOpen = false}> 
 		<div class="flex ">
-			<div class="flex-1 pl-4">
-
+			<div class="flex-1 pl-4 text-base-content">
 				Minimum size 
 			</div>
 			<div class="pr-4">
-
 				<input
 				bind:value={options.min_size}
 				type="number"
-				class="input input-bordered input-success w-full max-w-xs bg-neutral"
+				class="input input-bordered input-success w-full max-w-xs bg-base-100 text-base-content border"
 				/>
 			</div>
 		</div>
@@ -62,10 +60,13 @@
 			</button>
 		</div>
 	{/if}
-	{#each data_feed.data as trade}
+	
+	<uL>
+		{#each data_feed.data as trade}
 		<li class={`${trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content`}>
 			{trade.price}
 			{number_as_k(trade.size * trade.price, 1)}
 		</li>
-	{/each}
+		{/each}
+	</uL>
 </div>

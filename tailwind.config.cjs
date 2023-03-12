@@ -11,6 +11,7 @@ module.exports = {
 				secondary: "#7C909A",
 				accent: "#EA6947",
 				neutral: "#23282E",
+				"base-hover": "#232323",
 				"base-100": "#202020",
 				"base-200": "#1d1d1d",
 				"base-300": "#1a1a1a",

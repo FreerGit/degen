@@ -59,7 +59,7 @@
 		<table class="table-auto ml-6">
 			<thead>
 				<tr>
-					<th class="">{bybit_book.full_market_name}</th>
+					<th class="text-base-content">{bybit_book.full_market_name}</th>
 				</tr>
 			</thead>
 
