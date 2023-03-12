@@ -1,12 +1,12 @@
 # Tasks
-
+These are all @not done@ - just temp
 - [x] Starting state - JSON local storage
   - [x] remove dexie
   - [x] use local storage
 - [ ] Options for trades feed
   - [ ] delete
   - [ ] search
-  - [ ] settings
+  - [X] settings
 - [ ] liq feed
 - [ ] options for liq feed
 - [ ] trades delta over time

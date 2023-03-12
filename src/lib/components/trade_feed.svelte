@@ -63,7 +63,7 @@
 		</div>
 	{/if}
 	{#each data_feed.data as trade}
-		<li class={trade.side == 'Buy' ? 'text-app-buy' : 'text-app-sell'}>
+		<li class={`${trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content`}>
 			{trade.price}
 			{number_as_k(trade.size * trade.price, 1)}
 		</li>

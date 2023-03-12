@@ -1,32 +1,28 @@
 /** @type {import('tailwindcss').Config} */
+
+// https://daisyui.com/docs/colors/
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
 			colors: {
-				'primary': '#202020',
-				'primary': '#b8dcff',
-
-				'secondary': '#7c909a',
-				'secondary': '#002538',
-
-				'accent': '#ea6947',
-				'accent-content': '#3d0d00',
-
-				'neutral': '#23282e',
-				'neutral-content': '#c8d3e0',
-
-				base: {
-					100: '#202020',
-					200: '#1d1d1d',
-					300: '#1a1a1a'
-				},
-
-				'app-sell': '#DD0049',
-				'app-buy': '#00DD94',
-				'app-milk': '#D1D4DC'
+				"color-scheme": "dark",
+				primary: "#1C4E80",
+				secondary: "#7C909A",
+				accent: "#EA6947",
+				neutral: "#23282E",
+				"base-100": "#202020",
+				"base-200": "#1d1d1d",
+				"base-300": "#1a1a1a",
+				"base-content": "#d2d2d2",
+				info: "#0091D5",
+				success: "#6BB187",
+				warning: "#DBAE59",
+				error: "#AC3E31"
 			}
 		}
 	},
 	plugins: []
 };
+
+

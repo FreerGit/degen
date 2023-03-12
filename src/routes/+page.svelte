@@ -53,7 +53,7 @@
 </script>
 
 <!-- https://tailwindcss.com/docs/table-layout#basic-usage -->
-<main class="flex flex-row min-h-full min-w-full justify-between">
+<main class="flex flex-row min-h-full min-w-full justify-between bg-base-100">
 	<!-- ONE COMPONENT L8R -->
 	<div class="flex">
 		<table class="table-auto ml-6">
@@ -65,10 +65,10 @@
 
 			<tbody>
 				{#each bybit_book.asks as ask}
-					<tr class="w-full text-xs">
+					<tr class="w-full text-xs text-base-content">
 						<td> {ask.price} </td>
 						<td>
-							<div class="bg-app-sell" style="width: {(ask.size / largest_tick) * 100}%;">
+							<div class="bg-accent text-base-content" style="width: {(ask.size / largest_tick) * 100}%;">
 								{ask.size}
 							</div>
 						</td>
@@ -79,7 +79,7 @@
 			<!-- <thead> -->
 			<tr>
 				<th class="flex" />
-				<th class="{bybit_book.delta > 0 ? 'text-app-buy' : 'text-app-sell'} text-xs"
+				<th class="{bybit_book.delta > 0 ? 'text-primary' : 'text-accent'} text-xs"
 					>Δ {bybit_book.delta.toFixed(3)}</th
 				>
 			</tr>
@@ -87,10 +87,10 @@
 
 			<tbody>
 				{#each bybit_book.bids as bids}
-					<tr class="w-full text-xs">
+					<tr class="w-full text-xs text-base-content">
 						<td class="text-xs"> {bids.price} </td>
 						<td>
-							<div class="bg-app-buy" style="width: {(bids.size / largest_tick) * 100}%;">
+							<div class="bg-primary text-base-content" style="width: {(bids.size / largest_tick) * 100}%;">
 								{bids.size}
 							</div>
 						</td>
