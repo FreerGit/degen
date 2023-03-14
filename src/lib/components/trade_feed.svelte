@@ -15,13 +15,15 @@
 
 	export let data_feed: RotateArray;
 	export let options: TradeFeedOptions;
-	let isModalOpen: boolean = false;
+	let settings_modal_open: boolean = false;
 	let settings_state = false;
+	let search_modal_open: boolean = false;
+	let search_market: string = "";
+
 </script>
 
-
 <div>
-  <Modal open={isModalOpen} onClose={() => isModalOpen = false}> 
+  <Modal open={settings_modal_open} onClose={() => settings_modal_open = false} title="Settings"> 
 		<div class="flex ">
 			<div class="flex-1 pl-4 text-base-content">
 				Minimum size 
@@ -34,7 +36,22 @@
 				/>
 			</div>
 		</div>
-</Modal>
+	</Modal>
+</div>
+
+<div>
+  <Modal open={search_modal_open} onClose={() => search_modal_open = false} title="Chose markets"> 
+		<div class="flex">
+			<div class="pl-4 pt-2">
+				<input
+				bind:value={search_market}
+				placeholder="Search"
+				type="text"
+				class="input input-success w-full max-w-xs bg-base-100 text-base-content "
+				/>
+			</div>
+		</div>
+	</Modal>
 </div>
 
 
@@ -45,13 +62,11 @@
 >
 	{#if settings_state}
 		<div class="fixed flex min-w-full bg-black bg-opacity-50">
-			<button on:click={() => isModalOpen = true} class="text-white">
+			<button on:click={() => settings_modal_open = true} class="text-white">
 				<Settings />
 			</button>
 
-			
-
-			<button class="text-white">
+			<button on:click={() => search_modal_open = true} class="text-white">
 				<Search />
 			</button>
 
