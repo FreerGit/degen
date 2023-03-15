@@ -79,12 +79,12 @@
 			<!-- <thead> -->
 			<tr>
 				<th class="flex" />
-				<th class="{bybit_book.delta > 0 ? 'text-primary' : 'text-accent'} text-xs"
-					>Δ {bybit_book.delta.toFixed(3)}</th
-				>
+				<th class="{bybit_book.delta > 0 ? 'text-primary' : 'text-accent'} text-xs">
+					Δ {bybit_book.delta.toFixed(3)}
+				</th>
 			</tr>
 			<!-- </thead> -->
-
+			
 			<tbody>
 				{#each bybit_book.bids as bids}
 					<tr class="w-full text-xs text-base-content">

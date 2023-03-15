@@ -43,3 +43,5 @@ export type Trade = {
 	trade_time_ms: number;
 	side: Side;
 };
+
+export type Exchange = "Bybit" | "Binance";

@@ -12,6 +12,8 @@
 	import Trashbin from '$lib/assets/trashbin.svelte';
 	import type { RotateArray } from '$lib/rotate_array';
 	import Modal from './modal.svelte';
+	import { onMount } from 'svelte';
+	import { get_markets } from '$lib/markets/get_markets';
 
 	export let data_feed: RotateArray;
 	export let options: TradeFeedOptions;
@@ -19,6 +21,10 @@
 	let settings_state = false;
 	let search_modal_open: boolean = false;
 	let search_market: string = "";
+
+	onMount(async () => {
+		await get_markets()
+	})
 
 </script>
 
