@@ -5,9 +5,9 @@
 	import { onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
-	import { layoutStore } from '$lib/stores';
 	import { browser } from '$app/environment';
 	import MenuButton from '$lib/components/menu_button.svelte';
+	import { layoutStore } from '$lib/stores/layout';
 
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 

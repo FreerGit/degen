@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
+import type { OrderBookOptions } from '$lib/components/order_book.svelte';
+import type { TradeFeedOptions } from '$lib/components/trade_feed.svelte';
 import { writable } from 'svelte/store';
-import type { OrderBookOptions } from './components/order_book.svelte';
-import type { TradeFeedOptions } from './components/trade_feed.svelte';
 
 interface Layout {
 	trade_feed: TradeFeedOptions;

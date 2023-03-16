@@ -8,7 +8,7 @@ These are all @not done@ - just temp
   - [ ] search
     - To finish search multiple things need to happen.
     1. If markets are not in localstorage then go to point 2. ELSE go to point 3.
-    2. All markets across linear, perp and spot needs to be fetched for each exchange.
+    2. All markets across linear, perp and spot needs to be fetched for each exchange. SAMPLE DONE
     3. display all exchanges in modal and search bar for markets, this should be 5-10k pairs.
     4. After all pairs are chosen, save it.
     5. Reinstate the websocket subscription for the updated pairs.
@@ -34,3 +34,10 @@ Who handles subscriptions?
 ## Layout
 
 Maybe resizable windows later for OB and feeds but for now just have sized windows with layout config
+
+
+## EOD
+
+2. for all clicked exchanges make all the markets searchable
+3. fuzzy search or w/e 
+4. update subs

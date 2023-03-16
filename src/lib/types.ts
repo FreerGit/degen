@@ -44,4 +44,4 @@ export type Trade = {
 	side: Side;
 };
 
-export type Exchange = "Bybit" | "Binance";
+export const Exchanges = ["Bybit", "Binance"] as const;
