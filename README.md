@@ -1,5 +1,7 @@
 # Tasks
+
 These are all @not done@ - just temp
+
 - [x] Starting state - JSON local storage
   - [x] remove dexie
   - [x] use local storage
@@ -12,7 +14,7 @@ These are all @not done@ - just temp
     3. display all exchanges in modal and search bar for markets, this should be 5-10k pairs.
     4. After all pairs are chosen, save it.
     5. Reinstate the websocket subscription for the updated pairs.
-  - [X] settings
+  - [x] settings
 - [ ] liq feed
 - [ ] options for liq feed
 - [ ] trades delta over time
@@ -35,9 +37,8 @@ Who handles subscriptions?
 
 Maybe resizable windows later for OB and feeds but for now just have sized windows with layout config
 
-
 ## EOD
 
 2. for all clicked exchanges make all the markets searchable
-3. fuzzy search or w/e 
+3. fuzzy search or w/e
 4. update subs

@@ -8,11 +8,11 @@ if (browser) {
 	const local = localStorage.getItem('markets');
 	if (local && markets.length == 0) {
 		markets = JSON.parse(local);
-  } else {
-    const fetched_markets = await get_markets();
-    console.log(fetched_markets);
-    markets = fetched_markets;
-  }
+	} else {
+		const fetched_markets = await get_markets();
+		console.log(fetched_markets);
+		markets = fetched_markets;
+	}
 }
 
 export const markets_store = writable<MarketsPerExchange>(markets);

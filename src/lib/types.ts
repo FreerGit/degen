@@ -44,4 +44,6 @@ export type Trade = {
 	side: Side;
 };
 
-export const Exchanges = ["Bybit", "Binance"] as const;
+export const ExchangeValues = ['Bybit', 'Binance'] as const;
+
+export type Exchange = typeof ExchangeValues[number];

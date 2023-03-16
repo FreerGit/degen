@@ -6,8 +6,8 @@
 	import { match, P } from 'ts-pattern';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
 	import { browser } from '$app/environment';
-	import MenuButton from '$lib/components/menu_button.svelte';
 	import { layoutStore } from '$lib/stores/layout';
+	import MenuButton from '$lib/components/menu_button.svelte';
 
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
@@ -68,7 +68,10 @@
 					<tr class="w-full text-xs text-base-content">
 						<td> {ask.price} </td>
 						<td>
-							<div class="bg-accent text-base-content" style="width: {(ask.size / largest_tick) * 100}%;">
+							<div
+								class="bg-accent text-base-content"
+								style="width: {(ask.size / largest_tick) * 100}%;"
+							>
 								{ask.size}
 							</div>
 						</td>
@@ -84,13 +87,16 @@
 				</th>
 			</tr>
 			<!-- </thead> -->
-			
+
 			<tbody>
 				{#each bybit_book.bids as bids}
 					<tr class="w-full text-xs text-base-content">
 						<td class="text-xs"> {bids.price} </td>
 						<td>
-							<div class="bg-primary text-base-content" style="width: {(bids.size / largest_tick) * 100}%;">
+							<div
+								class="bg-primary text-base-content"
+								style="width: {(bids.size / largest_tick) * 100}%;"
+							>
 								{bids.size}
 							</div>
 						</td>
@@ -106,6 +112,5 @@
 		<TradeFeed data_feed={xx} bind:options={$layoutStore.trade_feed} />
 	{/if}
 
-	<MenuButton/>
-
+	<MenuButton />
 </main>
