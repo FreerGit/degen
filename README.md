@@ -42,3 +42,18 @@ Maybe resizable windows later for OB and feeds but for now just have sized windo
 1. make search result look nice, icons for exchanges and styling
 2. clickable
 3. update subs
+
+add/remove/update trade feed
+
+1. FAB - add trade feed
+2. modal, options, which exchange and their markets etc
+3. add component with said options
+4. start websocket for each exchange
+5. Then that list of websocket is updatable.
+
+NEXT UP
+you have a list of chosen markets now.
+display chosen markets
+submit button
+take list and sub.
+also should be able to remove chosen markets.

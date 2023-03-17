@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { BybitBook } from '$lib/bybit/order_book';
-	import { push_front, rotate_array } from '$lib/rotate_array';
-	import type { Delta, Payload, Snapshot, Trades } from '$lib/types';
+	import type { Delta, Payload, Snapshot } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
@@ -15,16 +14,10 @@
 
 	let largest_tick = 0;
 
-	let xx = rotate_array(100);
-
-	let opt = $layoutStore.trade_feed;
-
 	onMount(async () => {
 		const ws = new WebSocket(ENDPOINT);
 		ws.onopen = () => {
-			ws.send(
-				`{"op": "subscribe", "args": ["${$layoutStore.order_book.market}", "${$layoutStore.trade_feed.market}"]}`
-			);
+			ws.send(`{"op": "subscribe", "args": ["${$layoutStore.order_book.market}"]}`);
 		};
 		ws.onmessage = (message) => {
 			let json: Payload = JSON.parse(message.data);
@@ -39,13 +32,6 @@
 					bybit_book.insert((json as Snapshot).data.order_book);
 					bybit_book.asks = bybit_book.asks;
 					bybit_book.bids = bybit_book.bids;
-				})
-				.with({ data: P.array({ tick_direction: P.string }) }, () => {
-					(json as Trades).data.forEach((i) => {
-						if (i.size * i.price > opt.min_size) {
-							xx = push_front(xx, i);
-						}
-					});
 				})
 				.run();
 		};
@@ -109,7 +95,7 @@
 	<div />
 
 	{#if browser}
-		<TradeFeed data_feed={xx} bind:options={$layoutStore.trade_feed} />
+		<TradeFeed bind:options={$layoutStore.trade_feed} />
 	{/if}
 
 	<MenuButton />
