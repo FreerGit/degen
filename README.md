@@ -39,6 +39,6 @@ Maybe resizable windows later for OB and feeds but for now just have sized windo
 
 ## EOD
 
-2. for all clicked exchanges make all the markets searchable
-3. fuzzy search or w/e
-4. update subs
+1. make search result look nice, icons for exchanges and styling
+2. clickable
+3. update subs

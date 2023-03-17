@@ -13,34 +13,45 @@
 	import type { RotateArray } from '$lib/rotate_array';
 	import Modal from './modal.svelte';
 	import { onMount } from 'svelte';
-	import { ExchangeValues } from '$lib/types';
+	import { ExchangeValues, type Exchange } from '$lib/types';
 	import { markets_store } from '$lib/stores/markets';
 
 	export let data_feed: RotateArray;
 	export let options: TradeFeedOptions;
+
 	let settings_modal_open = false;
 	let settings_state = false;
-	let search_modal_open = false;
+	let search_modal_open = true;
 	let search_market = '';
 	let searchable_exchanges: Array<string> = ExchangeValues.slice();
-	let searchable_markets: Array<string> = [];
+	let markets_to_display: Array<MarketWithExchange> = [];
 
 	let markets = $markets_store;
 
-	const filter_market = () => {
-		let new_markets: Array<string> = [];
-		markets.forEach((e) => {
-			if (searchable_exchanges.includes(e.exchange.toString())) {
-				new_markets = new_markets.concat(e.markets);
-			}
-		});
-		searchable_markets = new_markets;
-		console.log(searchable_markets);
+	type MarketWithExchange = {
+		exchange: Exchange;
+		market_name: string;
 	};
 
-	onMount(async () => {
-		filter_market();
-	});
+	const search_markets = () => {
+		let found: Array<MarketWithExchange> = [];
+		for (let i = 0; i < markets.length; i++) {
+			for (let j = 0; j < markets[i].markets.length; j++) {
+				if (
+					markets[i].markets[j].startsWith(search_market.toUpperCase()) &&
+					searchable_exchanges.includes(markets[i].exchange)
+				) {
+					found.push({
+						exchange: markets[i].exchange,
+						market_name: markets[i].markets[j]
+					});
+				}
+			}
+		}
+		markets_to_display = found;
+	};
+
+	onMount(async () => {});
 </script>
 
 <div>
@@ -67,7 +78,7 @@
 	<Modal
 		open={search_modal_open}
 		onClose={() => (search_modal_open = false)}
-		title="Chose markets"
+		title="Choose markets"
 		size="Large"
 	>
 		<div class="flex h-full bg-base-300">
@@ -75,12 +86,7 @@
 				<p class="text-base-content text-xl">Exchanges</p>
 				{#each ExchangeValues as Ex}
 					<div class="flex space-x-2">
-						<input
-							type="checkbox"
-							bind:group={searchable_exchanges}
-							on:change={() => filter_market()}
-							value={Ex}
-						/>
+						<input type="checkbox" bind:group={searchable_exchanges} value={Ex} />
 						<p class="text-base-content">{Ex}</p>
 					</div>
 				{/each}
@@ -90,18 +96,22 @@
 				<div class="pl-4 pt-2">
 					<input
 						bind:value={search_market}
+						on:input={() => search_markets()}
 						placeholder="Search"
 						type="text"
 						class="input input-success w-full max-w-xs bg-base-100 text-base-content "
 					/>
 				</div>
 
-				<ul>
-					{#each searchable_markets as market}
-						<li>
-							{market}
-						</li>
-					{/each}
+				<ul class="pl-4">
+					{#if search_market.length > 0}
+						{#each markets_to_display as market}
+							<li>
+								{market.market_name}
+								{market.exchange}
+							</li>
+						{/each}
+					{/if}
 				</ul>
 			</div>
 		</div>

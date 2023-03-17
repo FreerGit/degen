@@ -53,9 +53,9 @@
 </script>
 
 <!-- https://tailwindcss.com/docs/table-layout#basic-usage -->
-<main class="flex flex-row min-h-full min-w-full justify-between bg-base-100">
+<main class="flex flex-row min-h-full h-full min-w-full justify-between bg-base-100">
 	<!-- ONE COMPONENT L8R -->
-	<div class="flex">
+	<div class="flex bg-base-100">
 		<table class="table-auto ml-6">
 			<thead>
 				<tr>
