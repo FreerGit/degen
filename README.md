@@ -55,5 +55,6 @@ NEXT UP
 you have a list of chosen markets now.
 display chosen markets
 submit button
+DONE^^^^^
 take list and sub.
 also should be able to remove chosen markets.

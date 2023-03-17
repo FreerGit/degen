@@ -1,8 +1,10 @@
 <script lang="ts" context="module">
 	export type TradeFeedOption = {
-		exchange: Exchange;
-		market: string;
 		min_size: number;
+		markets: Array<{
+			exchange: Exchange;
+			market: string;
+		}>;
 	};
 </script>
 
@@ -11,16 +13,15 @@
 	import Settings from '$lib/assets/settings.svelte';
 	import Search from '$lib/assets/search.svelte';
 	import Trashbin from '$lib/assets/trashbin.svelte';
-	import { push_front, rotate_array, type RotateArray } from '$lib/rotate_array';
+	import { rotate_array, type RotateArray } from '$lib/rotate_array';
 	import Modal from './modal.svelte';
 	import { onMount } from 'svelte';
-	import { ExchangeValues, type Exchange, type Payload, type Trades } from '$lib/types';
+	import { ExchangeValues, type Exchange } from '$lib/types';
 	import { markets_store } from '$lib/stores/markets';
-	import { match, P } from 'ts-pattern';
-	import { add_market_suffix, type MarketType } from '$lib/markets/get_markets';
-	import { get_exchange_trade_endpoint } from '$lib/exchange';
+	import type { MarketType } from '$lib/markets/get_markets';
+	import ModalWithButton from './modal_with_button.svelte';
 
-	export let options: Array<TradeFeedOption>;
+	export let options: TradeFeedOption;
 
 	let settings_modal_open = false;
 	let settings_state = false;
@@ -71,7 +72,8 @@
 
 	const handle_market = (info: MarketInfo) => {
 		markets_to_display = markets_to_display.filter((m) => m.market != info.market);
-		chosen_markets.push(info);
+		chosen_markets = [...chosen_markets, info];
+		console.log(chosen_markets);
 	};
 
 	// const update_websocket_connections = (exchanges: Array<Exchange>) => {
@@ -115,17 +117,12 @@
 </script>
 
 <div>
-	<Modal
-		open={settings_modal_open}
-		onClose={() => (settings_modal_open = false)}
-		title="Settings"
-		size="Small"
-	>
+	<Modal open={settings_modal_open} onClose={() => (settings_modal_open = false)} title="Settings">
 		<div class="flex ">
 			<div class="flex-1 pl-4 text-base-content">Minimum size</div>
 			<div class="pr-4">
 				<input
-					bind:value={options.min_size}
+					bind:value={options}
 					type="number"
 					class="input input-bordered input-success w-full max-w-xs bg-base-100 text-base-content border"
 				/>
@@ -135,15 +132,14 @@
 </div>
 
 <div>
-	<Modal
+	<ModalWithButton
 		open={search_modal_open}
 		onClose={() => (search_modal_open = false)}
 		title="Choose markets"
-		size="Large"
 	>
 		<div class="flex h-full bg-base-300">
-			<div class="flex flex-col hover:bg-base-hover min-h-max  pl-4  pr-4">
-				<p class="text-base-content text-xl">Exchanges</p>
+			<div class="flex flex-col hover:bg-base-hover min-h-max justify-middle items-center  w-1/4">
+				<p class="text-base-content text-l">Exchanges</p>
 				{#each ExchangeValues as Ex}
 					<div class="flex space-x-2">
 						<input type="checkbox" bind:group={searchable_exchanges} value={Ex} />
@@ -152,34 +148,53 @@
 				{/each}
 			</div>
 
-			<div class="w-full bg-neutral">
-				<div class="pl-4 pt-2">
-					<input
-						bind:value={search_market}
-						on:input={() => search_markets()}
-						placeholder="Search"
-						type="text"
-						class="input input-success w-full max-w-xs bg-base-100 text-base-content "
-					/>
+			<div class="h-full w-full bg-base-300">
+				<input
+					bind:value={search_market}
+					on:input={() => search_markets()}
+					placeholder="Search"
+					type="text"
+					class="input input-success w-full h-12 bg-base-200 text-base-content pl-2 text-xl"
+				/>
+				<div class="h-1/2 overflow-hidden">
+					<table
+						class="table-auto pointer-events-auto overflow-hidden text-base-content w-full pt-0.5"
+					>
+						<!-- class="text-base-content " -->
+						{#if search_market.length > 0}
+							{#each markets_to_display as market, i}
+								<tr
+									class="hover:bg-base-hover hover:cursor-default"
+									on:mousedown={() => handle_market(market)}
+								>
+									<td>
+										{market.market}
+									</td>
+									<td>
+										{market.type}
+									</td>
+									<td>
+										{market.exchange}
+									</td>
+								</tr>
+							{/each}
+						{/if}
+					</table>
 				</div>
 
-				<ul class="pl-4 pointer-events-auto">
-					{#if search_market.length > 0}
-						{#each markets_to_display as market, i}
-							<li
-								class="text-base-content pointer-events-auto hover:bg-base-hover hover:cursor-default"
-								on:mousedown={() => handle_market(market)}
-							>
-								{market.market}
-								{market.type}
-								{market.exchange}
-							</li>
-						{/each}
-					{/if}
-				</ul>
+				<div class="text-base-content">
+					{#each chosen_markets as cm}
+						{cm.market}
+					{/each}
+				</div>
+
+				<div class="absolute text-base-content bottom-0 right-0 pr-4">
+					<button class="pr-4" on:click={() => (search_modal_open = false)}> Cancel </button>
+					<button class="bg-primary py-2 px-2 rounded"> Update </button>
+				</div>
 			</div>
 		</div>
-	</Modal>
+	</ModalWithButton>
 </div>
 
 <div
