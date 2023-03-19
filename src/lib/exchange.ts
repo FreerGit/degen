@@ -1,4 +1,4 @@
-import type { MarketInfo, MarketType } from './markets/get_markets';
+import type { MarketType } from './markets/get_markets';
 import type { Exchange } from './types';
 
 export const get_exchange_trade_endpoint = (exchange: Exchange, type: MarketType) => {
@@ -34,7 +34,6 @@ export const get_trade_subscription_string = (
 	switch (exchange) {
 		case 'Bybit':
 			return `{"op": "subscribe", "args": ${JSON.stringify(to_sub_array)}}`;
-
 		case 'Binance':
 			throw console.error('get_trade_sub....');
 	}

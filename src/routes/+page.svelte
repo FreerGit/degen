@@ -2,7 +2,7 @@
 	import { BybitBook } from '$lib/bybit/order_book';
 	import type { Delta, Payload, Snapshot } from '$lib/types';
 	import { onMount } from 'svelte';
-	import { match } from 'ts-pattern';
+	import { match, P } from 'ts-pattern';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
 	import { browser } from '$app/environment';
 	import { layoutStore } from '$lib/stores/layout';
@@ -32,6 +32,9 @@
 					bybit_book.insert((json as Snapshot).data.order_book);
 					bybit_book.asks = bybit_book.asks;
 					bybit_book.bids = bybit_book.bids;
+				})
+				.with({ success: P.boolean }, (e) => {
+					console.log(e);
 				})
 				.run();
 		};

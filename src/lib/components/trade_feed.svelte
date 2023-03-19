@@ -106,35 +106,27 @@
 							}
 						});
 					})
+					.with({ success: P.boolean }, () => {})
 					.run();
 			};
-
-			// c.websocket.send()
 		});
 	};
 
+	const isNumber = (n: any) => {
+		return !isNaN(parseFloat(n)) && isFinite(n);
+	};
+
+	const validate_number = (n: any) => {
+		if (isNumber(n.target.value)) {
+			options.min_size = n.target.value;
+		} else {
+			options.min_size = 1;
+		}
+	};
+
 	onMount(async () => {
-		console.log(options);
 		chosen_markets = options.markets;
 		update_subscriptions(options.markets);
-
-		// 	ws.onopen = () => {
-		// 		ws.send(
-		// 			`{"op": "subscribe", "args": ["${options.market}"]}`
-		// 		);
-		// 	};
-		// 	ws.onmessage = (message) => {
-		// 		let json: Payload = JSON.parse(message.data);
-		// 		match(json)
-		// 			.with({ data: P.array({ tick_direction: P.string }) }, () => {
-		// 				(json as Trades).data.forEach((i) => {
-		// 					if (i.size * i.price > options.min_size) {
-		// 						data_feed = push_front(data_feed, i);
-		// 					}
-		// 				});
-		// 			})
-		// 			.run();
-		// 	};
 	});
 </script>
 
@@ -144,7 +136,8 @@
 			<div class="flex-1 pl-4 text-base-content">Minimum size</div>
 			<div class="pr-4">
 				<input
-					bind:value={options}
+					on:input={validate_number}
+					value={options.min_size}
 					type="number"
 					class="input input-bordered input-success w-full max-w-xs bg-base-100 text-base-content border"
 				/>

@@ -1,7 +1,12 @@
 import type { DeleteLevel, Level, Side } from './bybit/order_book';
 import type { MarketType } from './markets/get_markets';
 
-export type Payload = Snapshot | Delta | Trades;
+export type Payload = Snapshot | Delta | Trades | Connection;
+
+export type Connection = {
+	success: boolean;
+	request: string;
+};
 
 export type Snapshot = {
 	topic: string;
