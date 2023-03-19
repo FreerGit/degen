@@ -1,10 +1,7 @@
 <script lang="ts" context="module">
 	export type TradeFeedOption = {
 		min_size: number;
-		markets: Array<{
-			exchange: Exchange;
-			market: string;
-		}>;
+		markets: Array<MarketInfo>;
 	};
 </script>
 
@@ -13,13 +10,15 @@
 	import Settings from '$lib/assets/settings.svelte';
 	import Search from '$lib/assets/search.svelte';
 	import Trashbin from '$lib/assets/trashbin.svelte';
-	import { rotate_array, type RotateArray } from '$lib/rotate_array';
+	import { push_front, rotate_array, type RotateArray } from '$lib/rotate_array';
 	import Modal from './modal.svelte';
 	import { onMount } from 'svelte';
-	import { ExchangeValues, type Exchange } from '$lib/types';
+	import { ExchangeValues, type Exchange, type Payload, type Trades } from '$lib/types';
 	import { markets_store } from '$lib/stores/markets';
-	import type { MarketType } from '$lib/markets/get_markets';
+	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
 	import ModalWithButton from './modal_with_button.svelte';
+	import { get_exchange_trade_endpoint, get_trade_subscription_string } from '$lib/exchange';
+	import { match, P } from 'ts-pattern';
 
 	export let options: TradeFeedOption;
 
@@ -36,12 +35,6 @@
 	let connections: Array<WebsockerPerEndpoint> = [];
 
 	let markets = $markets_store;
-
-	type MarketInfo = {
-		exchange: Exchange;
-		type: MarketType;
-		market: string;
-	};
 
 	type WebsockerPerEndpoint = {
 		exchange: Exchange;
@@ -73,29 +66,58 @@
 	const handle_market = (info: MarketInfo) => {
 		markets_to_display = markets_to_display.filter((m) => m.market != info.market);
 		chosen_markets = [...chosen_markets, info];
-		console.log(chosen_markets);
 	};
 
-	// const update_websocket_connections = (exchanges: Array<Exchange>) => {
-	// 	connections = exchanges.map(e => {
-	// 		return {
-	// 			exchange: e,
-	// 			websocket: new WebSocket(get_exchange_endpoint(e))
-	// 		} as WebsocketPerExchange;
-	// 	});
-	// }
+	const update_subscriptions = (markets: Array<MarketInfo>) => {
+		connections = markets.map((e) => {
+			return {
+				exchange: e.exchange,
+				type: e.type,
+				websocket: new WebSocket(get_exchange_trade_endpoint(e.exchange, e.type))
+			} as WebsockerPerEndpoint;
+		});
 
-	// const update_subscriptions = (markets: Array<MarketWithExchange>) => {
-	// 	update_websocket_connections(markets.map(m => m.exchange));
+		connections.forEach((c) => {
+			console.log(c);
+			console.log(chosen_markets);
+			const to_sub = chosen_markets
+				.filter((cm) => cm.exchange == c.exchange && cm.type == c.type)
+				.map((cm) => cm.market);
+			console.log(to_sub);
+			console.log(get_trade_subscription_string(c.exchange, to_sub));
+			c.websocket.onopen = () => {
+				c.websocket.send(get_trade_subscription_string(c.exchange, to_sub));
+			};
 
-	// 	connections.forEach(c => {
-	// 		const markets_to_sub = markets.filter(m => m.)
-	// 		const endopint = get_exchange_trade_endpoint(c.exchange, )
-	// 	})
-	// }
+			c.websocket.onmessage = (message) => {
+				let json: Payload = JSON.parse(message.data);
+				match(json)
+					.with({ data: P.array({ L: P.string }) }, () => {
+						(json as Trades).data.forEach((i) => {
+							i.type = c.type; // inverse has usd dom.
+							if (i.type == 'inverse') {
+								if (i.v > options.min_size) {
+									data_feed = push_front(data_feed, i);
+								}
+							} else {
+								if (i.v * i.p > options.min_size) {
+									data_feed = push_front(data_feed, i);
+								}
+							}
+						});
+					})
+					.run();
+			};
+
+			// c.websocket.send()
+		});
+	};
 
 	onMount(async () => {
-		// update_subscriptions(options.map(o => {return {exchange: o.exchange, market_name: o.market}}));
+		console.log(options);
+		chosen_markets = options.markets;
+		update_subscriptions(options.markets);
+
 		// 	ws.onopen = () => {
 		// 		ws.send(
 		// 			`{"op": "subscribe", "args": ["${options.market}"]}`
@@ -220,9 +242,14 @@
 
 	<uL>
 		{#each data_feed.data as trade}
-			<li class={`${trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content`}>
-				{trade.price}
-				{number_as_k(trade.size * trade.price, 1)}
+			<li class={`${trade.S == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content`}>
+				{trade.p}
+				{#if trade.type == 'inverse'}
+					{number_as_k(trade.v, 1)}
+				{:else}
+					{number_as_k(trade.v * trade.p, 1)}
+				{/if}
+				{trade.type}
 			</li>
 		{/each}
 	</uL>

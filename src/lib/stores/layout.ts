@@ -15,11 +15,13 @@ let layout = {
 		markets: [
 			{
 				exchange: 'Bybit',
-				market: 'trade.BTCUSDT'
+				type: 'linear',
+				market: 'BTCUSDT'
 			},
 			{
-				exchange: 'Binance',
-				market: 'btcusdt@aggTrade'
+				exchange: 'Bybit',
+				type: 'inverse',
+				market: 'BTCUSD'
 			}
 		]
 	},

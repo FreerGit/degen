@@ -1,5 +1,12 @@
 # Tasks
 
+## smol
+
+Feeds should not render as chunks of list but rather singles, maybe stagger? - has to be smoother
+colors based on difference from min - tresholds or only min size
+
+## Large
+
 These are all @not done@ - just temp
 
 - [x] Starting state - JSON local storage
@@ -52,9 +59,4 @@ add/remove/update trade feed
 5. Then that list of websocket is updatable.
 
 NEXT UP
-you have a list of chosen markets now.
-display chosen markets
-submit button
-DONE^^^^^
-take list and sub.
 also should be able to remove chosen markets.

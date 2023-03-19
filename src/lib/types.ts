@@ -1,4 +1,5 @@
 import type { DeleteLevel, Level, Side } from './bybit/order_book';
+import type { MarketType } from './markets/get_markets';
 
 export type Payload = Snapshot | Delta | Trades;
 
@@ -32,16 +33,19 @@ export type Direction = 'PlusTick' | 'MinusTick ' | 'ZeroMinusTick' | 'ZeroPlusT
 
 export type Trades = {
 	topic: string;
+	ts: number;
 	data: Array<Trade>;
 };
 
 export type Trade = {
-	symbol: string;
-	tick_direction: Direction;
-	price: number;
-	size: number;
-	trade_time_ms: number;
-	side: Side;
+	T: number;
+	s: string;
+	S: Side;
+	v: number;
+	p: number;
+	L: Direction;
+	type: MarketType;
+	// trade_time_ms: number;
 };
 
 export const ExchangeValues = ['Bybit', 'Binance'] as const;
