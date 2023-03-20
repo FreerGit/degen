@@ -61,6 +61,7 @@
 			}
 		}
 		markets_to_display = found;
+		options.markets = found;
 	};
 
 	const handle_market = (info: MarketInfo) => {
@@ -68,23 +69,27 @@
 		chosen_markets = [...chosen_markets, info];
 	};
 
-	const update_subscriptions = (markets: Array<MarketInfo>) => {
-		connections = markets.map((e) => {
-			return {
-				exchange: e.exchange,
-				type: e.type,
-				websocket: new WebSocket(get_exchange_trade_endpoint(e.exchange, e.type))
-			} as WebsockerPerEndpoint;
+	const update_subscriptions = (chosen: Array<MarketInfo>) => {
+		console.log(markets);
+		connections.forEach(c => c.websocket.close());
+		connections = [];
+
+		chosen.forEach(m => {
+			if(!connections.find(c => c.exchange == m.exchange && c.type == m.type)) {
+				connections.push( {
+					exchange: m.exchange,
+					type: m.type,
+					websocket: new WebSocket(get_exchange_trade_endpoint(m.exchange, m.type))
+				} as WebsockerPerEndpoint);
+			}	
 		});
 
+		console.log(connections)
+
 		connections.forEach((c) => {
-			console.log(c);
-			console.log(chosen_markets);
 			const to_sub = chosen_markets
 				.filter((cm) => cm.exchange == c.exchange && cm.type == c.type)
 				.map((cm) => cm.market);
-			console.log(to_sub);
-			console.log(get_trade_subscription_string(c.exchange, to_sub));
 			c.websocket.onopen = () => {
 				c.websocket.send(get_trade_subscription_string(c.exchange, to_sub));
 			};
@@ -92,11 +97,11 @@
 			c.websocket.onmessage = (message) => {
 				let json: Payload = JSON.parse(message.data);
 				match(json)
-					.with({ data: P.array({ L: P.string }) }, () => {
+					.with({ data: P.array({ S: P.string }) }, () => {
 						(json as Trades).data.forEach((i) => {
 							i.type = c.type; // inverse has usd dom.
 							if (i.type == 'inverse') {
-								if (i.v > options.min_size) {
+								if (+i.v > options.min_size) { //
 									data_feed = push_front(data_feed, i);
 								}
 							} else {
@@ -111,6 +116,11 @@
 			};
 		});
 	};
+
+	const handle_update = (markets: Array<MarketInfo>) => {
+		search_modal_open = false;
+		update_subscriptions(markets);
+	}
 
 	const isNumber = (n: any) => {
 		return !isNaN(parseFloat(n)) && isFinite(n);
@@ -205,7 +215,7 @@
 
 				<div class="absolute text-base-content bottom-0 right-0 pr-4">
 					<button class="pr-4" on:click={() => (search_modal_open = false)}> Cancel </button>
-					<button class="bg-primary py-2 px-2 rounded"> Update </button>
+					<button class="bg-primary py-2 px-2 rounded" on:click={() => handle_update(chosen_markets)}> Update </button>
 				</div>
 			</div>
 		</div>
