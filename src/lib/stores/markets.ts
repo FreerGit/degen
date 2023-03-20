@@ -4,14 +4,16 @@ import { writable } from 'svelte/store';
 
 let markets = [] as MarketsPerExchange;
 
+const fetch_wrapper = async () => {
+	return await get_markets();
+}
+
 if (browser) {
 	const local = localStorage.getItem('markets');
 	if (local && markets.length == 0) {
 		markets = JSON.parse(local);
 	} else {
-		const fetched_markets = await get_markets();
-		console.log(fetched_markets);
-		markets = fetched_markets;
+		markets = await fetch_wrapper();
 	}
 }
 
