@@ -6,7 +6,7 @@ let markets = [] as MarketsPerExchange;
 
 const fetch_wrapper = async () => {
 	return await get_markets();
-}
+};
 
 if (browser) {
 	const local = localStorage.getItem('markets');

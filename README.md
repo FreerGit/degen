@@ -44,19 +44,10 @@ Who handles subscriptions?
 
 Maybe resizable windows later for OB and feeds but for now just have sized windows with layout config
 
-## EOD
+## EOD - NEXT UP
 
-1. make search result look nice, icons for exchanges and styling
-2. clickable
-3. update subs
+be able to add trade feeds
+be able to remove trade feeds
 
-add/remove/update trade feed
-
-1. FAB - add trade feed
-2. modal, options, which exchange and their markets etc
-3. add component with said options
-4. start websocket for each exchange
-5. Then that list of websocket is updatable.
-
-NEXT UP
 also should be able to remove chosen markets.
+search modal shouldn't look like shit

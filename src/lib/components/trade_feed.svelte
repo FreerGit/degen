@@ -13,28 +13,22 @@
 	import { push_front, rotate_array, type RotateArray } from '$lib/rotate_array';
 	import Modal from './modal.svelte';
 	import { onMount } from 'svelte';
-	import { ExchangeValues, type Exchange, type Payload, type Trades } from '$lib/types';
-	import { markets_store } from '$lib/stores/markets';
 	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
-	import ModalWithButton from './modal_with_button.svelte';
 	import { get_exchange_trade_endpoint, get_trade_subscription_string } from '$lib/exchange';
 	import { match, P } from 'ts-pattern';
+	import SearchModal from './search_modal.svelte';
+	import type { Exchange, Payload, Trades } from '$lib/types';
 
 	export let options: TradeFeedOption;
 
 	let settings_modal_open = false;
 	let settings_state = false;
-	let search_modal_open = true;
-
-	let search_market = '';
-	let searchable_exchanges: Array<string> = ExchangeValues.slice();
-	let markets_to_display: Array<MarketInfo> = [];
-	let chosen_markets: Array<MarketInfo> = [];
+	let search_modal_open = false;
 
 	let data_feed: RotateArray = rotate_array(100);
 	let connections: Array<WebsockerPerEndpoint> = [];
-
-	let markets = $markets_store;
+	let markets_to_display: Array<MarketInfo> = [];
+	let chosen_markets: Array<MarketInfo> = [];
 
 	type WebsockerPerEndpoint = {
 		exchange: Exchange;
@@ -42,49 +36,26 @@
 		websocket: WebSocket;
 	};
 
-	const search_markets = () => {
-		let found: Array<MarketInfo> = [];
-		for (let i = 0; i < markets.length; i++) {
-			for (let j = 0; j < markets[i].markets.length; j++) {
-				if (
-					markets[i].markets[j].startsWith(search_market.toUpperCase()) &&
-					searchable_exchanges.includes(markets[i].exchange)
-				) {
-					if (chosen_markets.every((e) => e.market != markets[i].markets[j])) {
-						found.push({
-							exchange: markets[i].exchange,
-							type: markets[i].market_type,
-							market: markets[i].markets[j]
-						});
-					}
-				}
-			}
-		}
-		markets_to_display = found;
-		options.markets = found;
-	};
-
-	const handle_market = (info: MarketInfo) => {
-		markets_to_display = markets_to_display.filter((m) => m.market != info.market);
-		chosen_markets = [...chosen_markets, info];
+	const handle_update = (markets: Array<MarketInfo>) => {
+		settings_modal_open = false;
+		update_subscriptions(markets);
 	};
 
 	const update_subscriptions = (chosen: Array<MarketInfo>) => {
-		console.log(markets);
-		connections.forEach(c => c.websocket.close());
+		connections.forEach((c) => c.websocket.close());
 		connections = [];
 
-		chosen.forEach(m => {
-			if(!connections.find(c => c.exchange == m.exchange && c.type == m.type)) {
-				connections.push( {
+		chosen.forEach((m) => {
+			if (!connections.find((c) => c.exchange == m.exchange && c.type == m.type)) {
+				connections.push({
 					exchange: m.exchange,
 					type: m.type,
 					websocket: new WebSocket(get_exchange_trade_endpoint(m.exchange, m.type))
 				} as WebsockerPerEndpoint);
-			}	
+			}
 		});
 
-		console.log(connections)
+		console.log(connections);
 
 		connections.forEach((c) => {
 			const to_sub = chosen_markets
@@ -101,7 +72,8 @@
 						(json as Trades).data.forEach((i) => {
 							i.type = c.type; // inverse has usd dom.
 							if (i.type == 'inverse') {
-								if (+i.v > options.min_size) { //
+								if (+i.v > options.min_size) {
+									//
 									data_feed = push_front(data_feed, i);
 								}
 							} else {
@@ -116,11 +88,6 @@
 			};
 		});
 	};
-
-	const handle_update = (markets: Array<MarketInfo>) => {
-		search_modal_open = false;
-		update_subscriptions(markets);
-	}
 
 	const isNumber = (n: any) => {
 		return !isNaN(parseFloat(n)) && isFinite(n);
@@ -156,71 +123,14 @@
 	</Modal>
 </div>
 
-<div>
-	<ModalWithButton
-		open={search_modal_open}
-		onClose={() => (search_modal_open = false)}
-		title="Choose markets"
-	>
-		<div class="flex h-full bg-base-300">
-			<div class="flex flex-col hover:bg-base-hover min-h-max justify-middle items-center  w-1/4">
-				<p class="text-base-content text-l">Exchanges</p>
-				{#each ExchangeValues as Ex}
-					<div class="flex space-x-2">
-						<input type="checkbox" bind:group={searchable_exchanges} value={Ex} />
-						<p class="text-base-content">{Ex}</p>
-					</div>
-				{/each}
-			</div>
-
-			<div class="h-full w-full bg-base-300">
-				<input
-					bind:value={search_market}
-					on:input={() => search_markets()}
-					placeholder="Search"
-					type="text"
-					class="input input-success w-full h-12 bg-base-200 text-base-content pl-2 text-xl"
-				/>
-				<div class="h-1/2 overflow-hidden">
-					<table
-						class="table-auto pointer-events-auto overflow-hidden text-base-content w-full pt-0.5"
-					>
-						<!-- class="text-base-content " -->
-						{#if search_market.length > 0}
-							{#each markets_to_display as market, i}
-								<tr
-									class="hover:bg-base-hover hover:cursor-default"
-									on:mousedown={() => handle_market(market)}
-								>
-									<td>
-										{market.market}
-									</td>
-									<td>
-										{market.type}
-									</td>
-									<td>
-										{market.exchange}
-									</td>
-								</tr>
-							{/each}
-						{/if}
-					</table>
-				</div>
-
-				<div class="text-base-content">
-					{#each chosen_markets as cm}
-						{cm.market}
-					{/each}
-				</div>
-
-				<div class="absolute text-base-content bottom-0 right-0 pr-4">
-					<button class="pr-4" on:click={() => (search_modal_open = false)}> Cancel </button>
-					<button class="bg-primary py-2 px-2 rounded" on:click={() => handle_update(chosen_markets)}> Update </button>
-				</div>
-			</div>
-		</div>
-	</ModalWithButton>
-</div>
+<SearchModal
+	bind:open={search_modal_open}
+	title="Chose Markets"
+	display={markets_to_display}
+	chosen={chosen_markets}
+	{options}
+	update={handle_update}
+/>
 
 <div
 	on:mouseenter={() => (settings_state = true)}
