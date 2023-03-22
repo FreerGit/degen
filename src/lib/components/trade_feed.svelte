@@ -18,12 +18,14 @@
 	import { match, P } from 'ts-pattern';
 	import SearchModal from './search_modal.svelte';
 	import type { Exchange, Payload, Trades } from '$lib/types';
+	import ConfirmModal from './confirm_modal.svelte';
 
 	export let options: TradeFeedOption;
 
 	let settings_modal_open = false;
 	let settings_state = false;
 	let search_modal_open = false;
+	let confirm_modal_open = false;
 
 	let data_feed: RotateArray = rotate_array(100);
 	let connections: Array<WebsockerPerEndpoint> = [];
@@ -126,12 +128,21 @@
 
 <SearchModal
 	bind:open={search_modal_open}
-	title="Chose Markets"
+	title="Choose Markets"
 	display={markets_to_display}
 	chosen={chosen_markets}
 	{options}
 	update={handle_update}
 />
+
+<ConfirmModal 
+	bind:open={confirm_modal_open}
+	title="Confirmation"
+	on_yes={() => {}}
+> 
+	<p class="text-base-content text-xl pl-4 py-4">Delete pane?</p>
+</ConfirmModal>
+
 
 <div
 	on:mouseenter={() => (settings_state = true)}
@@ -148,7 +159,7 @@
 				<Search />
 			</button>
 
-			<button class="text-white">
+			<button on:click={() => (confirm_modal_open = true)} class="text-white">
 				<Trashbin />
 			</button>
 		</div>

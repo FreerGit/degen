@@ -48,6 +48,3 @@ Maybe resizable windows later for OB and feeds but for now just have sized windo
 
 be able to add trade feeds
 be able to remove trade feeds
-
-also should be able to remove chosen markets.
-search modal shouldn't look like shit
