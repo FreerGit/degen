@@ -39,6 +39,7 @@
 	const handle_update = (markets: Array<MarketInfo>) => {
 		settings_modal_open = false;
 		update_subscriptions(markets);
+		options.markets = markets;
 	};
 
 	const update_subscriptions = (chosen: Array<MarketInfo>) => {
