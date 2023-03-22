@@ -48,3 +48,6 @@ Maybe resizable windows later for OB and feeds but for now just have sized windo
 
 be able to add trade feeds
 be able to remove trade feeds
+
+I need a panel system, split the screen up in resizable panels then add/remove from that list
+Begin with add panel and stack like 5 trade feeds.

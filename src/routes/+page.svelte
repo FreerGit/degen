@@ -1,3 +1,4 @@
+
 <script lang="ts">
 	import { BybitBook } from '$lib/bybit/order_book';
 	import type { Delta, Payload, Snapshot } from '$lib/types';
@@ -8,11 +9,15 @@
 	import { layoutStore } from '$lib/stores/layout';
 	import MenuButton from '$lib/components/menu_button.svelte';
 
+	
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
 	let bybit_book = new BybitBook();
 
 	let largest_tick = 0;
+
+
+
 
 	onMount(async () => {
 		const ws = new WebSocket(ENDPOINT);
