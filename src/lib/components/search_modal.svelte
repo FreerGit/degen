@@ -23,7 +23,7 @@
 					markets[i].markets[j].startsWith(search_market.toUpperCase()) &&
 					searchable_exchanges.includes(markets[i].exchange)
 				) {
-					if (chosen.every((e) => e.market != markets[i].markets[j])) {
+					if (!chosen.some((e) => e.market == markets[i].markets[j] && e.type == markets[i].market_type)) {
 						found.push({
 							exchange: markets[i].exchange,
 							type: markets[i].market_type,
@@ -110,7 +110,7 @@
 								class="hover:bg-base-hover hover:cursor-default"
 								on:mousedown={() => remove_market(cm)}
 							>
-								{cm.market + ' '}
+								{cm.market + ' ' + cm.type}
 							</div>
 						{/each}
 					</div>
