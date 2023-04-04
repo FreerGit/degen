@@ -135,14 +135,9 @@
 	update={handle_update}
 />
 
-<ConfirmModal 
-	bind:open={confirm_modal_open}
-	title="Confirmation"
-	on_yes={() => {}}
-> 
+<ConfirmModal bind:open={confirm_modal_open} title="Confirmation" on_yes={() => {}}>
 	<p class="text-base-content text-xl pl-4 py-4">Delete pane?</p>
 </ConfirmModal>
-
 
 <div
 	on:mouseenter={() => (settings_state = true)}

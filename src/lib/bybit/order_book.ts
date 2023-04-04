@@ -21,7 +21,7 @@ class BybitBook extends OrderBook {
 	constructor() {
 		super();
 		this.market = 'BTCUSDT';
-		this.full_market_name = 'bybit/' + this.market;
+		this.exchange = "Bybit";
 	}
 
 	update_delta(updates: Updates): void {

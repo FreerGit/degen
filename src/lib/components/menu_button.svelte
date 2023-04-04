@@ -1,4 +1,5 @@
 <script lang="ts">
+	export let handle_panel: () => void;
 	let is_fullscreen = false;
 	let open = false;
 
@@ -29,7 +30,7 @@
 		class="absolute bottom-20 right-6 w-48 py-2 mt-1 bg-base-200 rounded shadow-md"
 		style="z-index: 1000;"
 	>
-		<button class={button_style}>Add Panel</button>
+		<button on:click={handle_panel} class={button_style}>Add Panel</button>
 		{#if is_fullscreen}
 			<button on:click={handle_fullscreen} class={button_style}>Exit Fullscreen</button>
 		{:else}

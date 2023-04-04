@@ -4,10 +4,9 @@
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
-
 		extend: {
 			fontSize: {
-				'2xs': ['0.75rem', '0.9rem'],
+				'2xs': ['0.75rem', '0.9rem']
 			},
 			colors: {
 				'color-scheme': 'dark',

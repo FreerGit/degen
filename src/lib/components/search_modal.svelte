@@ -23,7 +23,11 @@
 					markets[i].markets[j].startsWith(search_market.toUpperCase()) &&
 					searchable_exchanges.includes(markets[i].exchange)
 				) {
-					if (!chosen.some((e) => e.market == markets[i].markets[j] && e.type == markets[i].market_type)) {
+					if (
+						!chosen.some(
+							(e) => e.market == markets[i].markets[j] && e.type == markets[i].market_type
+						)
+					) {
 						found.push({
 							exchange: markets[i].exchange,
 							type: markets[i].market_type,

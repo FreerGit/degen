@@ -1,4 +1,3 @@
-
 <script lang="ts">
 	import { BybitBook } from '$lib/bybit/order_book';
 	import type { Delta, Payload, Snapshot } from '$lib/types';
@@ -8,16 +7,45 @@
 	import { browser } from '$app/environment';
 	import { layoutStore } from '$lib/stores/layout';
 	import MenuButton from '$lib/components/menu_button.svelte';
+	import Grid from 'svelte-grid';
+	import gridHelp from 'svelte-grid/build/helper/index.mjs';
 
-	
+	const id = () => '_' + Math.random().toString(36).substr(2, 9);
+
+	const COLS = 45;
+
+	let items = [
+		{
+			[COLS]: gridHelp.item({
+				x: 0,
+				y: 0,
+				w: 9,
+				h: 9
+			}),
+			id: id()
+		},
+	];
+
+	const add_panel = () => {
+		const prev = items.at(-1);
+		items.push({
+			[COLS]: gridHelp.item({
+				x: prev ? prev[COLS].w * items.length: 0,
+				y: 0,
+				w: 9,
+				h: 9,
+			}),
+			id: id()
+		})
+	}
+
+	const cols = [[1000, COLS]];
+
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
 	let bybit_book = new BybitBook();
 
 	let largest_tick = 0;
-
-
-
 
 	onMount(async () => {
 		const ws = new WebSocket(ENDPOINT);
@@ -49,62 +77,74 @@
 <!-- https://tailwindcss.com/docs/table-layout#basic-usage -->
 <main class="flex flex-row min-h-full h-full min-w-full justify-between bg-base-100">
 	<!-- ONE COMPONENT L8R -->
-	<div class="flex bg-base-100">
-		<table class="table-auto ml-6">
-			<thead>
+	<Grid
+		bind:items
+		rowHeight={100}
+		let:item
+		{cols}
+		let:index
+		fastStart={true}
+		fillSpace={true}
+		gap={[5, 0]}
+
+	>
+		<div class="flex bg-base-300 h-full w-full overflow-y-auto no-scrollbar">
+			<table class="table-auto">
+				<thead>
+					<tr>
+						<th class="text-base-content text-xs">{bybit_book.exchange + '/' + bybit_book.market}</th>
+					</tr>
+				</thead>
+        
+				<tbody>
+					{#each bybit_book.asks as ask}
+						<tr class="w-full text-2xs text-base-content ">
+							<td> {ask.price} </td>
+							<td>
+								<div
+									class="bg-accent text-base-content"
+									style="width: {(ask.size / largest_tick) * 100}%;"
+								>
+									{ask.size}
+								</div>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+
+				<!-- <thead> -->
 				<tr>
-					<th class="text-base-content">{bybit_book.full_market_name}</th>
+					<th class="flex" />
+					<th class="{bybit_book.delta > 0 ? 'text-primary' : 'text-accent'} text-2xs">
+						Δ {bybit_book.delta.toFixed(3)}
+					</th>
 				</tr>
-			</thead>
+				<!-- </thead> -->
 
-			<tbody>
-				{#each bybit_book.asks as ask}
-					<tr class="w-full text-xs text-base-content">
-						<td> {ask.price} </td>
-						<td>
-							<div
-								class="bg-accent text-base-content"
-								style="width: {(ask.size / largest_tick) * 100}%;"
-							>
-								{ask.size}
-							</div>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
+				<tbody>
+					{#each bybit_book.bids as bids}
+						<tr class="w-full text-2xs text-base-content">
+							<td> {bids.price} </td>
+							<td>
+								<div
+									class="bg-primary text-base-content"
+									style="width: {(bids.size / largest_tick) * 100}%;"
+								>
+									{bids.size}
+								</div>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 
-			<!-- <thead> -->
-			<tr>
-				<th class="flex" />
-				<th class="{bybit_book.delta > 0 ? 'text-primary' : 'text-accent'} text-xs">
-					Δ {bybit_book.delta.toFixed(3)}
-				</th>
-			</tr>
-			<!-- </thead> -->
-
-			<tbody>
-				{#each bybit_book.bids as bids}
-					<tr class="w-full text-xs text-base-content">
-						<td class="text-xs"> {bids.price} </td>
-						<td>
-							<div
-								class="bg-primary text-base-content"
-								style="width: {(bids.size / largest_tick) * 100}%;"
-							>
-								{bids.size}
-							</div>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
-
-	<div />
-
+		<div />
+	</Grid>
+	
 	{#if browser}
 		<TradeFeed bind:options={$layoutStore.trade_feed} />
 	{/if}
-
-	<MenuButton />
+	
+	<MenuButton handle_panel={add_panel}/>
 </main>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let open: boolean;
 	export let title: string;
-  export let on_yes: () => void;
+	export let on_yes: () => void;
 </script>
 
 {#if open}
@@ -17,18 +17,18 @@
 			<slot>
 				<!-- Here goes nested component -->
 			</slot>
-      <div class="absolute text-base-content bottom-0 right-0 pr-4 py-4">
-        <button class="pr-4" on:click={() => (open = false)}> Cancel </button>
-        <button
-          class="bg-primary py-2 px-2 rounded"
-          on:click={() => {
-            on_yes();
-            open = false;
-          }}
-        >
-          Update
-        </button>
-      </div>
+			<div class="absolute text-base-content bottom-0 right-0 pr-4 py-4">
+				<button class="pr-4" on:click={() => (open = false)}> Cancel </button>
+				<button
+					class="bg-primary py-2 px-2 rounded"
+					on:click={() => {
+						on_yes();
+						open = false;
+					}}
+				>
+					Update
+				</button>
+			</div>
 		</div>
 	</div>
 {/if}
