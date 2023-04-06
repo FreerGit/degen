@@ -135,17 +135,13 @@
 	update={handle_update}
 />
 
-<ConfirmModal bind:open={confirm_modal_open} title="Confirmation" on_yes={() => {}}>
-	<p class="text-base-content text-xl pl-4 py-4">Delete pane?</p>
-</ConfirmModal>
-
 <div
 	on:mouseenter={() => (settings_state = true)}
 	on:mouseleave={() => (settings_state = false)}
 	class="flex flex-col w-40 max-h-screen overflow-y-auto no-scrollbar"
 >
 	{#if settings_state}
-		<div class="fixed flex min-w-full bg-black bg-opacity-50">
+		<div class="fixed flex min-w-full bg-base-300">
 			<button on:click={() => (settings_modal_open = true)} class="text-white">
 				<Settings />
 			</button>
