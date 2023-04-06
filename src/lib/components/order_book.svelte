@@ -1,16 +1,19 @@
 <script lang="ts">
-	import type { AbstractOrderBook } from "$lib/order_book";
+	import Trashbin from "$lib/assets/trashbin.svelte";
+import type { AbstractOrderBook } from "$lib/order_book";
 	import { layoutStore } from "$lib/stores/layout";
 	import type { Delta, Payload, Snapshot } from "$lib/types";
 	import { onMount } from "svelte";
 	import { match, P } from "ts-pattern";
 
 	export let order_book: AbstractOrderBook;
+	export let on_delete: (item: any) => void;
 	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
+	let ws: WebSocket;
 
 	onMount(async () => {
-		const ws = new WebSocket(ENDPOINT);
+		ws = new WebSocket(ENDPOINT);
 		ws.onopen = () => {
 			ws.send(`{"op": "subscribe", "args": ["${$layoutStore.order_book.market}"]}`);
 		};
@@ -40,6 +43,13 @@
 		<thead>
 			<tr>
 				<th class="text-base-content text-xs">{order_book.exchange + '/' + order_book.market}</th>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<span on:pointerdown={e => e.stopPropagation()}
+					on:click={(item) =>  {on_delete(item); ws.close()}}
+					class="remove cursor-pointer"
+					>
+					<Trashbin></Trashbin>
+				</span>
 			</tr>
 		</thead>
 		

@@ -14,15 +14,15 @@
 
 	const id = () => '_' + Math.random().toString(36).substr(2, 9);
 
-	const COLS = 45;
+	const COLS = 50;
 
 	let items = [
 		{
 			[COLS]: gridHelp.item({
 				x: 0,
 				y: 0,
-				w: 9,
-				h: 9
+				w: 10,
+				h: 10
 			}),
 			id: id(),
 			data: {
@@ -37,8 +37,8 @@
 			[COLS]: gridHelp.item({
 				x: prev ? prev[COLS].w * items.length: 0,
 				y: 0,
-				w: 9,
-				h: 9,
+				w: 10,
+				h: 10,
 			}),
 			id: id(),
 			data: {
@@ -46,6 +46,10 @@
 			}
 		})
 		items = items;
+	}
+
+	const remove_panel = (item: any) => {
+		items = items.filter((value) => value.id !== item.id);
 	}
 
 	const cols = [[2000, COLS]];
@@ -66,7 +70,8 @@
 		fillSpace={true}
 		gap={[5, 0]}
 	>
-			<OrderBook order_book={dataItem.data.book}/>
+
+			<OrderBook on_delete={() => remove_panel(dataItem)} order_book={dataItem.data.book}/>
 	</Grid>
 	
 	{#if browser}
