@@ -14,15 +14,15 @@
 
 	const id = () => '_' + Math.random().toString(36).substr(2, 9);
 
-	const COLS = 50;
+	const COLS = 100;
 
 	let items = [
 		{
 			[COLS]: gridHelp.item({
 				x: 0,
 				y: 0,
-				w: 10,
-				h: 10
+				w: 20,
+				h: 19
 			}),
 			id: id(),
 			data: {
@@ -37,8 +37,8 @@
 			[COLS]: gridHelp.item({
 				x: prev ? prev[COLS].w * items.length: 0,
 				y: 0,
-				w: 10,
-				h: 10,
+				w: 20,
+				h: 19,
 			}),
 			id: id(),
 			data: {
@@ -63,7 +63,7 @@
 	<!-- ONE COMPONENT L8R -->
 	<Grid
 		bind:items
-		rowHeight={100}
+		rowHeight={50}
 		let:dataItem
 		{cols}
 		fastStart={true}
@@ -71,7 +71,7 @@
 		gap={[5, 0]}
 	>
 
-			<OrderBook on_delete={() => remove_panel(dataItem)} order_book={dataItem.data.book}/>
+		<OrderBook on_delete={() => remove_panel(dataItem)} order_book={dataItem.data.book}/>
 	</Grid>
 	
 	{#if browser}

@@ -165,7 +165,7 @@
 				{:else}
 					{number_as_k(trade.v * trade.p, 1)}
 				{/if}
-				{trade.type}
+				<!-- {trade.type} -->
 			</li>
 		{/each}
 	</uL>
