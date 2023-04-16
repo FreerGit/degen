@@ -11,13 +11,17 @@
 	import gridHelp from 'svelte-grid/build/helper/index.mjs';
 	import OrderBook from '$lib/components/order_book.svelte';
 	import type { AbstractOrderBook } from '$lib/order_book';
+	import type { MarketInfo } from '$lib/markets/get_markets';
 
 	const id = () => '_' + Math.random().toString(36).substr(2, 9);
 
 	const COLS = 100;
 
-	let items = [
-		{
+	let layout = $layoutStore;
+
+	const populate_default_layout = () => {
+		return layout.order_book.markets.map((m: MarketInfo) => {
+			return {
 			[COLS]: gridHelp.item({
 				x: 0,
 				y: 0,
@@ -26,12 +30,16 @@
 			}),
 			id: id(),
 			data: {
-				book: new BybitBook()
+				book: new BybitBook(m)
 			}
-		},
-	];
+		}
+		})
+	}
 
-	const add_panel = () => {
+	let items = populate_default_layout();
+
+
+	const add_panel = (m: MarketInfo) => {
 		const prev = items.at(-1);
 		items.push({
 			[COLS]: gridHelp.item({
@@ -42,10 +50,11 @@
 			}),
 			id: id(),
 			data: {
-				book: new BybitBook()
+				book: new BybitBook(m)
 			}
 		})
 		items = items;
+		layout.order_book.markets = [m]
 	}
 
 	const remove_panel = (item: any) => {
@@ -55,7 +64,7 @@
 	const cols = [[2000, COLS]];
 
 
-	let bybit_book: AbstractOrderBook = new BybitBook();
+	// let bybit_book: AbstractOrderBook = new BybitBook();
 </script>
 
 <!-- https://tailwindcss.com/docs/table-layout#basic-usage -->
@@ -75,7 +84,7 @@
 	</Grid>
 	
 	{#if browser}
-		<TradeFeed bind:options={$layoutStore.trade_feed} />
+		<TradeFeed bind:options={layout.trade_feed} />
 	{/if}
 	
 	<MenuButton handle_panel={add_panel}/>

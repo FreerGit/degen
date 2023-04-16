@@ -1,3 +1,4 @@
+import type { MarketInfo } from '$lib/markets/get_markets';
 import { AbstractOrderBook } from '$lib/order_book';
 import { sorted_insert, sorted_update } from '$lib/sorted_array';
 import type { Updates } from '$lib/types';
@@ -18,10 +19,18 @@ type DeleteLevel = {
 };
 
 class BybitBook extends AbstractOrderBook {
-	constructor() {
+	constructor(m: MarketInfo) {
 		super();
-		this.market = 'BTCUSDT';
-		this.exchange = "Bybit";
+		this.market = m.market;
+		this.exchange = m.exchange;
+	}
+
+	get_endpoint(): string {
+		return "wss://stream.bybit.com/realtime_public";
+	}
+
+	get_subscribe_args(): string {
+		return `orderBookL2_25.${this.market}`
 	}
 
 	update_delta(updates: Updates): void {

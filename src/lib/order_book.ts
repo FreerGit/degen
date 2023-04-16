@@ -18,6 +18,10 @@ abstract class AbstractOrderBook {
 		this.highest_vol_level = 1;
 	}
 
+	abstract get_endpoint(): string;
+
+	abstract get_subscribe_args(): string;
+
 	abstract update_delta(updates: Updates): void;
 
 	abstract snapshot(to_insert: Array<Level>): void;

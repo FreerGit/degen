@@ -26,7 +26,13 @@ let layout = {
 		]
 	},
 	order_book: {
-		market: 'orderBookL2_25.BTCUSDT'
+		markets: [
+			{
+				exchange: 'Bybit',
+				type: 'linear',
+				market: 'BTCUSDT'
+			},
+		]
 	}
 } as Layout;
 

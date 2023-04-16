@@ -1,7 +1,16 @@
 <script lang="ts">
-	export let handle_panel: () => void;
+	import type { MarketInfo } from "$lib/markets/get_markets";
+	import { layoutStore } from "$lib/stores/layout";
+	import PickOrderbookModal from "./pick_orderbook_modal.svelte";
+	import SearchModal from "./search_modal.svelte";
+
+	export let handle_panel: (m: MarketInfo) => void;
 	let is_fullscreen = false;
 	let open = false;
+	let add_ob_modal = false;
+
+	let markets_to_display: Array<MarketInfo> = [];
+	let chosen_markets: MarketInfo;
 
 	const handle_fullscreen = () => {
 		if (is_fullscreen) {
@@ -15,9 +24,12 @@
 	const check_fullscreen = () => {
 		document.fullscreenElement ? (is_fullscreen = true) : (is_fullscreen = false);
 	};
-
+	let options = $layoutStore.trade_feed;
 	let button_style = 'flex min-w-full px-4 py-2 hover:bg-base-hover text-base-content';
 </script>
+
+<PickOrderbookModal open={add_ob_modal} {options} title={"Choose order book"} update={(m) => handle_panel(m)}  />
+
 
 {#if open}
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -30,7 +42,7 @@
 		class="absolute bottom-20 right-6 w-48 py-2 mt-1 bg-base-200 rounded shadow-md"
 		style="z-index: 1000;"
 	>
-		<button on:click={handle_panel} class={button_style}>Add Panel</button>
+		<button on:click={() => add_ob_modal = true} class={button_style}>Add Panel</button>
 		{#if is_fullscreen}
 			<button on:click={handle_fullscreen} class={button_style}>Exit Fullscreen</button>
 		{:else}

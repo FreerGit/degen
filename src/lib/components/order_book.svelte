@@ -1,6 +1,13 @@
+<script lang="ts" context="module">
+	export type OrderBookOptions = {
+		markets: Array<MarketInfo>;
+	};
+</script>
+
 <script lang="ts">
 	import Trashbin from "$lib/assets/trashbin.svelte";
-import type { AbstractOrderBook } from "$lib/order_book";
+	import type { MarketInfo } from "$lib/markets/get_markets";
+	import type { AbstractOrderBook } from "$lib/order_book";
 	import { layoutStore } from "$lib/stores/layout";
 	import type { Delta, Payload, Snapshot } from "$lib/types";
 	import { onMount } from "svelte";
@@ -8,14 +15,15 @@ import type { AbstractOrderBook } from "$lib/order_book";
 
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
-	const ENDPOINT = 'wss://stream.bybit.com/realtime_public';
 
 	let ws: WebSocket;
 
 	onMount(async () => {
-		ws = new WebSocket(ENDPOINT);
+		const endpoint = order_book.get_endpoint();
+		const sub = order_book.get_subscribe_args();
+		ws = new WebSocket(endpoint);
 		ws.onopen = () => {
-			ws.send(`{"op": "subscribe", "args": ["${$layoutStore.order_book.market}"]}`);
+			ws.send(`{"op": "subscribe", "args": ["${sub}"]}`);
 		};
 		ws.onmessage = (message) => {
 			let json: Payload = JSON.parse(message.data);
@@ -45,7 +53,10 @@ import type { AbstractOrderBook } from "$lib/order_book";
 				<th class="text-base-content text-xs">{order_book.exchange + '/' + order_book.market}</th>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<span on:pointerdown={e => e.stopPropagation()}
-					on:click={(item) =>  {on_delete(item); ws.close()}}
+					on:click={(item) =>  {
+						on_delete(item);
+						ws.close();
+						}}
 					class="remove cursor-pointer"
 					>
 					<Trashbin></Trashbin>
