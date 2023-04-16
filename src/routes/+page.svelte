@@ -17,22 +17,23 @@
 
 	const COLS = 100;
 
-	let layout = $layoutStore;
-
+	
 	const populate_default_layout = () => {
-		return layout.order_book.markets.map((m: MarketInfo) => {
+		let counter = -1;
+		return $layoutStore.order_book.markets.map((m: MarketInfo) => {
+			counter++;
 			return {
-			[COLS]: gridHelp.item({
-				x: 0,
-				y: 0,
-				w: 20,
-				h: 19
-			}),
-			id: id(),
-			data: {
-				book: new BybitBook(m)
+				[COLS]: gridHelp.item({
+					x: 20 * counter,
+					y: 0,
+					w: 20,
+					h: 19,
+				}),
+				id: id(),
+				data: {
+					book: new BybitBook(m)
+				}
 			}
-		}
 		})
 	}
 
@@ -54,7 +55,7 @@
 			}
 		})
 		items = items;
-		layout.order_book.markets = [m]
+		$layoutStore.order_book.markets = [...$layoutStore.order_book.markets, m];
 	}
 
 	const remove_panel = (item: any) => {
@@ -84,7 +85,7 @@
 	</Grid>
 	
 	{#if browser}
-		<TradeFeed bind:options={layout.trade_feed} />
+		<TradeFeed bind:options={$layoutStore.trade_feed} />
 	{/if}
 	
 	<MenuButton handle_panel={add_panel}/>
