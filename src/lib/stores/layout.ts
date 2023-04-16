@@ -31,7 +31,7 @@ let layout = {
 				exchange: 'Bybit',
 				type: 'linear',
 				market: 'BTCUSDT'
-			},
+			}
 		]
 	}
 } as Layout;

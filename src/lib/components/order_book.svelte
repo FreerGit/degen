@@ -5,13 +5,13 @@
 </script>
 
 <script lang="ts">
-	import Trashbin from "$lib/assets/trashbin.svelte";
-	import type { MarketInfo } from "$lib/markets/get_markets";
-	import type { AbstractOrderBook } from "$lib/order_book";
-	import { layoutStore } from "$lib/stores/layout";
-	import type { Delta, Payload, Snapshot } from "$lib/types";
-	import { onMount } from "svelte";
-	import { match, P } from "ts-pattern";
+	import Trashbin from '$lib/assets/trashbin.svelte';
+	import type { MarketInfo } from '$lib/markets/get_markets';
+	import { number_as_k } from '$lib/math';
+	import type { AbstractOrderBook } from '$lib/order_book';
+	import type { Delta, Payload, Snapshot } from '$lib/types';
+	import { onMount } from 'svelte';
+	import { match, P } from 'ts-pattern';
 
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
@@ -50,20 +50,24 @@
 	<table class="table-auto">
 		<thead>
 			<tr>
-				<th class="text-base-content text-xs">{order_book.exchange + '/' + order_book.market}</th>
+				<th class="text-base-content text-xs"
+					>{order_book.market_info.exchange + '/' + order_book.market_info.market}</th
+				>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<span on:pointerdown={e => e.stopPropagation()}
-					on:click={(item) =>  {
+				<span
+					on:pointerdown={(e) => e.stopPropagation()}
+					on:click={(item) => {
 						on_delete(item);
+						// $layoutStore.order_book.markets.filter((i: MarketInfo) => i)
 						ws.close();
-						}}
+					}}
 					class="remove cursor-pointer"
-					>
-					<Trashbin></Trashbin>
+				>
+					<Trashbin />
 				</span>
 			</tr>
 		</thead>
-		
+
 		<tbody>
 			{#each order_book.asks as ask}
 				<tr class="w-full text-2xs text-base-content ">
@@ -84,7 +88,7 @@
 		<tr>
 			<th class="flex" />
 			<th class="{order_book.delta > 0 ? 'text-primary' : 'text-accent'} text-2xs">
-				Δ {order_book.delta.toFixed(3)}
+				Δ {number_as_k(order_book.delta, 1)}
 			</th>
 		</tr>
 		<!-- </thead> -->

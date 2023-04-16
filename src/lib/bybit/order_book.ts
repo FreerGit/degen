@@ -21,16 +21,15 @@ type DeleteLevel = {
 class BybitBook extends AbstractOrderBook {
 	constructor(m: MarketInfo) {
 		super();
-		this.market = m.market;
-		this.exchange = m.exchange;
+		this.market_info = m;
 	}
 
 	get_endpoint(): string {
-		return "wss://stream.bybit.com/realtime_public";
+		return 'wss://stream.bybit.com/realtime_public';
 	}
 
 	get_subscribe_args(): string {
-		return `orderBookL2_25.${this.market}`
+		return `orderBookL2_25.${this.market_info.market}`;
 	}
 
 	update_delta(updates: Updates): void {
@@ -39,8 +38,7 @@ class BybitBook extends AbstractOrderBook {
 		this.update(updates.update);
 		this.delta =
 			this.bids.reduce((a, b) => a + b.size, 0) - this.asks.reduce((a, b) => a + b.size, 0);
-		this.highest_vol_level = this.get_highest_vol_level()
-			
+		this.highest_vol_level = this.get_highest_vol_level();
 	}
 
 	snapshot(to_insert: Array<Level>) {
@@ -78,7 +76,7 @@ class BybitBook extends AbstractOrderBook {
 		for (let i = 0; i < this.bids.length; i++) {
 			if (this.bids[i].size > largest) {
 				largest = this.bids[i].size;
-			} 
+			}
 		}
 		for (let i = 0; i < this.asks.length; i++) {
 			if (this.asks[i].size > largest) {

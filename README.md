@@ -47,5 +47,6 @@ Maybe resizable windows later for OB and feeds but for now just have sized windo
 ## EOD - NEXT UP
 
 add panel modal
-  - add any order book across available exchanges and markets
-  - add any trade feed .....
+
+- add any order book across available exchanges and markets
+- add any trade feed .....

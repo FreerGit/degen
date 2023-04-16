@@ -18,7 +18,6 @@
 	import { match, P } from 'ts-pattern';
 	import SearchModal from './search_modal.svelte';
 	import type { Exchange, Payload, Trades } from '$lib/types';
-	import ConfirmModal from './confirm_modal.svelte';
 
 	export let options: TradeFeedOption;
 

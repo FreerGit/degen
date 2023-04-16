@@ -23,19 +23,17 @@
 					markets[i].markets[j].startsWith(search_market.toUpperCase()) &&
 					searchable_exchanges.includes(markets[i].exchange)
 				) {
-          found.push({
-            exchange: markets[i].exchange,
-            type: markets[i].market_type,
-            market: markets[i].markets[j]
-          });
+					found.push({
+						exchange: markets[i].exchange,
+						type: markets[i].market_type,
+						market: markets[i].markets[j]
+					});
 				}
 			}
 		}
 		display = found;
 		options.markets = found;
 	};
-
-
 </script>
 
 {#if open}
@@ -77,7 +75,7 @@
 								{#each display as market, i}
 									<tr
 										class="hover:bg-base-hover hover:cursor-default"
-										on:mousedown={() => chosen = market}
+										on:mousedown={() => (chosen = market)}
 									>
 										<td>
 											{market.market}
@@ -96,9 +94,8 @@
 
 					<div class="flex-col flex text-base-content w-full overflow-y-scroll h-1/4">
 						{#if chosen}
-              {chosen.market + ' ' + chosen.type}
-            {/if}
-				
+							{chosen.market + ' ' + chosen.type}
+						{/if}
 					</div>
 
 					<div class="absolute text-base-content bottom-0 right-0 pr-4">

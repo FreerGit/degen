@@ -1,20 +1,19 @@
 import type { Level } from './bybit/order_book';
-import type { Exchange, Updates } from './types';
+import type { MarketInfo } from './markets/get_markets';
+import type { Updates } from './types';
 
 abstract class AbstractOrderBook {
 	asks: Array<Level>;
 	bids: Array<Level>;
 	delta: number;
-	market: string;
-	exchange: Exchange;
+	market_info: MarketInfo;
 	highest_vol_level: number;
 
 	constructor() {
 		this.asks = [];
 		this.bids = [];
 		this.delta = 0;
-		this.market = '';
-		this.exchange = '';
+		this.market_info;
 		this.highest_vol_level = 1;
 	}
 
@@ -25,7 +24,6 @@ abstract class AbstractOrderBook {
 	abstract update_delta(updates: Updates): void;
 
 	abstract snapshot(to_insert: Array<Level>): void;
-
 }
 
 export { AbstractOrderBook };
