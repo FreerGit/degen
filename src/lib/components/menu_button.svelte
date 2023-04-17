@@ -25,7 +25,7 @@
 </script>
 
 <PickOrderbookModal
-	open={add_ob_modal}
+	bind:open={add_ob_modal}
 	{options}
 	title={'Choose order book'}
 	update={(m) => handle_panel(m)}
@@ -42,7 +42,7 @@
 		class="absolute bottom-20 right-6 w-48 py-2 mt-1 bg-base-200 rounded shadow-md"
 		style="z-index: 1000;"
 	>
-		<button on:click={() => (add_ob_modal = true)} class={button_style}>Add Panel</button>
+		<button on:click={() => {add_ob_modal = true; open = false}} class={button_style}>Add Panel</button>
 		{#if is_fullscreen}
 			<button on:click={handle_fullscreen} class={button_style}>Exit Fullscreen</button>
 		{:else}

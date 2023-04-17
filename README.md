@@ -6,22 +6,8 @@ Feeds should not render as chunks of list but rather singles, maybe stagger? - h
 colors based on difference from min - tresholds or only min size
 
 ## Large
+- [ ] switch to v5 bybit api use exchange.ts
 
-These are all @not done@ - just temp
-
-- [x] Starting state - JSON local storage
-  - [x] remove dexie
-  - [x] use local storage
-- [ ] Options for trades feed
-  - [ ] delete
-  - [ ] search
-    - To finish search multiple things need to happen.
-    1. If markets are not in localstorage then go to point 2. ELSE go to point 3.
-    2. All markets across linear, perp and spot needs to be fetched for each exchange. SAMPLE DONE
-    3. display all exchanges in modal and search bar for markets, this should be 5-10k pairs.
-    4. After all pairs are chosen, save it.
-    5. Reinstate the websocket subscription for the updated pairs.
-  - [x] settings
 - [ ] liq feed
 - [ ] options for liq feed
 - [ ] trades delta over time
@@ -44,9 +30,4 @@ Who handles subscriptions?
 
 Maybe resizable windows later for OB and feeds but for now just have sized windows with layout config
 
-## EOD - NEXT UP
 
-add panel modal
-
-- add any order book across available exchanges and markets
-- add any trade feed .....
