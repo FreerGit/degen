@@ -3,13 +3,13 @@ name: degen
 region: fra
 services:
   - name: degen
-  # Relative to the repository root
+    # Relative to the repository root
     dockerfile_path: Dockerfile
     source_dir: .
     github:
       branch: main
       # No CI setup and no tests so do manually.
-      deploy_on_push: false
+      deploy_on_push: true
       repo: FreerGit/degen
       # Active probe used by DigitalOcean's to ensure our application is healthy
     health_check:

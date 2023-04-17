@@ -1,11 +1,24 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 
-/** @type {import('vite').UserConfig} */
-const config = {
-	plugins: [sveltekit()],
-	build: {
-		target: 'esnext',
+export default defineConfig(({ command }) => {
+	console.log(command);
+	if (command === 'serve') {
+		return {
+			plugins: [sveltekit()],
+			build: {
+				target: 'esnext'
+			}
+		};
+	} else {
+		return {
+			plugins: [sveltekit()],
+			build: {
+				target: 'esnext'
+			},
+			ssr: {
+				noExternal: ['sorted-btree']
+			}
+		};
 	}
-};
-
-export default config;
+});

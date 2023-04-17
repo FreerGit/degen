@@ -31,8 +31,8 @@ export const add_orderbook_pair_suffix = (exchange: Exchange, market: string): s
 		case 'Bybit':
 			return `orderbook.50.${market}`;
 		case 'Binance':
-			throw console.error("TODO! add_orderbook_pair_suffix")
-			// return `${market}@aggTrade`;
+			throw console.error('TODO! add_orderbook_pair_suffix');
+		// return `${market}@aggTrade`;
 	}
 };
 

@@ -6,6 +6,7 @@ Feeds should not render as chunks of list but rather singles, maybe stagger? - h
 colors based on difference from min - tresholds or only min size
 
 ## Large
+
 - [ ] switch to v5 bybit api use exchange.ts
 
 - [ ] liq feed
@@ -23,9 +24,9 @@ colors based on difference from min - tresholds or only min size
 - [ ] make settings savable - local storage
 
 ## UI work
+
 - [ ] Make the drag icon on the orderbook larger and white
 - [ ] Trade feed should be scaling color from min
-
 
 ## Issues
 
@@ -34,5 +35,3 @@ Who handles subscriptions?
 ## Layout
 
 Maybe resizable windows later for OB and feeds but for now just have sized windows with layout config
-
-

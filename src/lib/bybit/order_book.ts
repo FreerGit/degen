@@ -1,8 +1,7 @@
 import { add_orderbook_pair_suffix, get_exchange_endpoint } from '$lib/exchange';
 import type { MarketInfo } from '$lib/markets/get_markets';
 import { AbstractOrderBook, type Level } from '$lib/order_book';
-import { sorted_insert, sorted_update } from '$lib/sorted_array';
-import type { OrderBook, Updates } from '$lib/types';
+import type { OrderBook } from '$lib/types';
 
 class BybitBook extends AbstractOrderBook {
 	constructor(m: MarketInfo) {
@@ -42,22 +41,22 @@ class BybitBook extends AbstractOrderBook {
 				this.asks.set(lvl[0], lvl[1]);
 			}
 		});
-		
+
 		let largest = 0;
 		this.delta =
 			this.bids.reduce((acc, lvl) => {
 				if (lvl[1] > largest) {
-					largest = lvl[1]; 
+					largest = lvl[1];
 				}
-				return acc + lvl[1]
-			}, 0) - this.asks.reduce((acc, lvl) => {
+				return acc + lvl[1];
+			}, 0) -
+			this.asks.reduce((acc, lvl) => {
 				if (lvl[1] > largest) {
-					largest = lvl[1]; 
+					largest = lvl[1];
 				}
-				return acc + lvl[1]
+				return acc + lvl[1];
 			}, 0);
 		this.highest_vol_level = largest;
-
 	}
 }
 

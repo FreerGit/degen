@@ -29,17 +29,17 @@
 		ws.onmessage = (message) => {
 			// convert asks and bids to numbers
 			let json: Payload = JSON.parse(message.data, function (key, value) {
-				if(key === "a") {
+				if (key === 'a') {
 					return value.map((lvl: Level) => {
-						return [+lvl[0], +lvl[1]] 
-					})
+						return [+lvl[0], +lvl[1]];
+					});
 				}
-				if(key === "b") {
+				if (key === 'b') {
 					return value.map((lvl: Level) => {
-						return [+lvl[0], +lvl[1]] 
-					})
+						return [+lvl[0], +lvl[1]];
+					});
 				}
-				return value
+				return value;
 			});
 			match(json)
 				.with({ type: 'delta' }, () => {
@@ -82,7 +82,7 @@
 		</thead>
 
 		<tbody>
-			{#each order_book.asks.toArray().reverse() as [price,size]}
+			{#each order_book.asks.toArray() as [price, size]}
 				<tr class="w-full text-2xs text-base-content ">
 					<td> {price} </td>
 					<td>
@@ -105,7 +105,7 @@
 		</tr>
 
 		<tbody>
-			{#each order_book.bids.toArray() as [price,size]}
+			{#each order_book.bids.toArray() as [price, size]}
 				<tr class="w-full text-2xs text-base-content">
 					<td> {price} </td>
 					<td>
