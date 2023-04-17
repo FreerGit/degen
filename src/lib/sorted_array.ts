@@ -2,7 +2,7 @@ import type { Level } from './bybit/order_book';
 
 const binary_search = (curr: Array<Level>, val: Level) => {
 	for (let index = 0; index < curr.length; index++) {
-		if (curr[index].price == val.price) {
+		if (curr[index][0] == val[0]) {
 			return index;
 		}
 	}
@@ -20,11 +20,11 @@ export const sorted_insert = (curr: Array<Level>, val: Level) => {
 	if (curr.length == 0) {
 		curr.push(val);
 	} else {
-		if (curr[curr.length - 1].price > val.price) {
+		if (curr[curr.length - 1][0] > val[0]) {
 			curr.push(val);
 		} else {
 			for (let idx = 0; idx < curr.length; idx++) {
-				if (curr[idx].price < val.price) {
+				if (curr[idx][0] < val[0]) {
 					curr.splice(idx, 0, val);
 					break;
 				}

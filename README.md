@@ -22,6 +22,11 @@ colors based on difference from min - tresholds or only min size
 - [ ] add coinbase trade feed
 - [ ] make settings savable - local storage
 
+## UI work
+- [ ] Make the drag icon on the orderbook larger and white
+- [ ] Trade feed should be scaling color from min
+
+
 ## Issues
 
 Who handles subscriptions?

@@ -1,22 +1,8 @@
+import { add_orderbook_pair_suffix, get_exchange_endpoint } from '$lib/exchange';
 import type { MarketInfo } from '$lib/markets/get_markets';
-import { AbstractOrderBook } from '$lib/order_book';
+import { AbstractOrderBook, type Level } from '$lib/order_book';
 import { sorted_insert, sorted_update } from '$lib/sorted_array';
-import type { Updates } from '$lib/types';
-
-type Side = 'Buy' | 'Sell';
-
-type Level = {
-	price: string;
-	symbol: string;
-	side: Side;
-	size: number;
-};
-
-type DeleteLevel = {
-	price: string;
-	symbol: string;
-	side: Side;
-};
+import type { OrderBook, Updates } from '$lib/types';
 
 class BybitBook extends AbstractOrderBook {
 	constructor(m: MarketInfo) {
@@ -25,67 +11,55 @@ class BybitBook extends AbstractOrderBook {
 	}
 
 	get_endpoint(): string {
-		return 'wss://stream.bybit.com/realtime_public';
+		return get_exchange_endpoint(this.market_info.exchange, this.market_info.type);
 	}
 
 	get_subscribe_args(): string {
-		return `orderBookL2_25.${this.market_info.market}`;
+		return add_orderbook_pair_suffix(this.market_info.exchange, this.market_info.market);
 	}
 
-	update_delta(updates: Updates): void {
-		this.delete(updates.delete);
-		this.snapshot(updates.insert);
-		this.update(updates.update);
-		this.delta =
-			this.bids.reduce((a, b) => a + b.size, 0) - this.asks.reduce((a, b) => a + b.size, 0);
-		this.highest_vol_level = this.get_highest_vol_level();
-	}
-
-	snapshot(to_insert: Array<Level>) {
-		to_insert.forEach((level) => {
-			if (level.side === 'Buy') {
-				sorted_insert(this.bids, level);
-			} else {
-				sorted_insert(this.asks, level);
-			}
+	snapshot(data: OrderBook): void {
+		data.b.forEach((lvl: Level) => {
+			this.bids.set(lvl[0], lvl[1]);
+		});
+		data.a.forEach((lvl: Level) => {
+			this.asks.set(lvl[0], lvl[1]);
 		});
 	}
 
-	delete(to_delete: Array<DeleteLevel>): void {
-		to_delete.forEach((level) => {
-			if (level.side === 'Buy') {
-				this.bids = this.bids.filter((curr_level) => curr_level.price !== level.price);
+	update_delta(data: OrderBook): void {
+		data.b.forEach((lvl: Level) => {
+			if (lvl[1] == 0) {
+				this.bids.delete(lvl[0]);
 			} else {
-				this.asks = this.asks.filter((curr_level) => curr_level.price !== level.price);
+				this.bids.set(lvl[0], lvl[1]);
 			}
 		});
-	}
-
-	update(to_update: Array<Level>): void {
-		to_update.forEach((level) => {
-			if (level.side === 'Buy') {
-				sorted_update(this.bids, level);
+		data.a.forEach((lvl: Level) => {
+			if (lvl[1] == 0) {
+				this.asks.delete(lvl[0]);
 			} else {
-				sorted_update(this.asks, level);
+				this.asks.set(lvl[0], lvl[1]);
 			}
 		});
-	}
-
-	get_highest_vol_level(): number {
+		
 		let largest = 0;
-		for (let i = 0; i < this.bids.length; i++) {
-			if (this.bids[i].size > largest) {
-				largest = this.bids[i].size;
-			}
-		}
-		for (let i = 0; i < this.asks.length; i++) {
-			if (this.asks[i].size > largest) {
-				largest = this.asks[i].size;
-			}
-		}
-		return largest;
+		this.delta =
+			this.bids.reduce((acc, lvl) => {
+				if (lvl[1] > largest) {
+					largest = lvl[1]; 
+				}
+				return acc + lvl[1]
+			}, 0) - this.asks.reduce((acc, lvl) => {
+				if (lvl[1] > largest) {
+					largest = lvl[1]; 
+				}
+				return acc + lvl[1]
+			}, 0);
+		this.highest_vol_level = largest;
+
 	}
 }
 
-export type { Side, Level, DeleteLevel };
+export type { Level };
 export { BybitBook };

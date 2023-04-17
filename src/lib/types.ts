@@ -12,20 +12,20 @@ export type Snapshot = {
 	topic: string;
 	type: string;
 	data: OrderBook;
-	cross_seq: number;
-	timestamp_e6: number;
+	ts: number;
 };
 
 export type OrderBook = {
-	order_book: Array<Level>;
+	a: Array<Level>;
+	b: Array<Level>;
+	s: string;
 };
 
 export type Delta = {
 	topic: string;
 	type: string;
-	data: Updates;
-	cross_seq: number;
-	timestamp_e6: number;
+	data: OrderBook;
+	ts: number;
 };
 
 export type Updates = {

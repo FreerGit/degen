@@ -14,7 +14,7 @@
 	import Modal from './modal.svelte';
 	import { onMount } from 'svelte';
 	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
-	import { get_exchange_trade_endpoint, get_trade_subscription_string } from '$lib/exchange';
+	import { get_exchange_endpoint, get_trade_subscription_string } from '$lib/exchange';
 	import { match, P } from 'ts-pattern';
 	import SearchModal from './search_modal.svelte';
 	import type { Exchange, Payload, Trades } from '$lib/types';
@@ -52,7 +52,7 @@
 				connections.push({
 					exchange: m.exchange,
 					type: m.type,
-					websocket: new WebSocket(get_exchange_trade_endpoint(m.exchange, m.type))
+					websocket: new WebSocket(get_exchange_endpoint(m.exchange, m.type))
 				} as WebsockerPerEndpoint);
 			}
 		});

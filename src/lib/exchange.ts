@@ -1,7 +1,7 @@
 import type { MarketType } from './markets/get_markets';
 import type { Exchange } from './types';
 
-export const get_exchange_trade_endpoint = (exchange: Exchange, type: MarketType) => {
+export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 	switch (exchange) {
 		case 'Bybit':
 			switch (type) {
@@ -23,6 +23,16 @@ export const add_trade_pair_suffix = (exchange: Exchange, market: string): strin
 			return `publicTrade.${market}`;
 		case 'Binance':
 			return `${market}@aggTrade`;
+	}
+};
+
+export const add_orderbook_pair_suffix = (exchange: Exchange, market: string): string => {
+	switch (exchange) {
+		case 'Bybit':
+			return `orderbook.50.${market}`;
+		case 'Binance':
+			throw console.error("TODO! add_orderbook_pair_suffix")
+			// return `${market}@aggTrade`;
 	}
 };
 

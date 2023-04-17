@@ -6,6 +6,7 @@
 
 <script lang="ts">
 	import Trashbin from '$lib/assets/trashbin.svelte';
+	import type { Level } from '$lib/bybit/order_book';
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { number_as_k } from '$lib/math';
 	import type { AbstractOrderBook } from '$lib/order_book';
@@ -26,7 +27,20 @@
 			ws.send(`{"op": "subscribe", "args": ["${sub}"]}`);
 		};
 		ws.onmessage = (message) => {
-			let json: Payload = JSON.parse(message.data);
+			// convert asks and bids to numbers
+			let json: Payload = JSON.parse(message.data, function (key, value) {
+				if(key === "a") {
+					return value.map((lvl: Level) => {
+						return [+lvl[0], +lvl[1]] 
+					})
+				}
+				if(key === "b") {
+					return value.map((lvl: Level) => {
+						return [+lvl[0], +lvl[1]] 
+					})
+				}
+				return value
+			});
 			match(json)
 				.with({ type: 'delta' }, () => {
 					order_book.update_delta((json as Delta).data);
@@ -34,7 +48,7 @@
 					order_book.bids = order_book.bids;
 				})
 				.with({ type: 'snapshot' }, () => {
-					order_book.snapshot((json as Snapshot).data.order_book);
+					order_book.snapshot((json as Snapshot).data);
 					order_book.asks = order_book.asks;
 					order_book.bids = order_book.bids;
 				})
@@ -58,7 +72,6 @@
 					on:pointerdown={(e) => e.stopPropagation()}
 					on:click={(item) => {
 						on_delete(item);
-						// $layoutStore.order_book.markets.filter((i: MarketInfo) => i)
 						ws.close();
 					}}
 					class="remove cursor-pointer"
@@ -69,40 +82,38 @@
 		</thead>
 
 		<tbody>
-			{#each order_book.asks as ask}
+			{#each order_book.asks.toArray().reverse() as [price,size]}
 				<tr class="w-full text-2xs text-base-content ">
-					<td> {ask.price} </td>
+					<td> {price} </td>
 					<td>
 						<div
 							class="bg-accent text-base-content"
-							style="width: {(ask.size / order_book.highest_vol_level) * 100}%;"
+							style="width: {(size / order_book.highest_vol_level) * 100}%;"
 						>
-							{ask.size}
+							{size}
 						</div>
 					</td>
 				</tr>
 			{/each}
 		</tbody>
 
-		<!-- <thead> -->
 		<tr>
 			<th class="flex" />
 			<th class="{order_book.delta > 0 ? 'text-primary' : 'text-accent'} text-2xs">
 				Δ {number_as_k(order_book.delta, 1)}
 			</th>
 		</tr>
-		<!-- </thead> -->
 
 		<tbody>
-			{#each order_book.bids as bids}
+			{#each order_book.bids.toArray() as [price,size]}
 				<tr class="w-full text-2xs text-base-content">
-					<td> {bids.price} </td>
+					<td> {price} </td>
 					<td>
 						<div
 							class="bg-primary text-base-content"
-							style="width: {(bids.size / order_book.highest_vol_level) * 100}%;"
+							style="width: {(size / order_book.highest_vol_level) * 100}%;"
 						>
-							{bids.size}
+							{size}
 						</div>
 					</td>
 				</tr>
