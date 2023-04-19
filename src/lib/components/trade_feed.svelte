@@ -43,11 +43,11 @@
 		options.markets = markets;
 	};
 
-	const update_subscriptions = (chosen: Array<MarketInfo>) => {
+	const update_subscriptions = async (chosen: Array<MarketInfo>) => {
 		connections.forEach((c) => c.websocket.close());
 		connections = [];
 
-		chosen.forEach((m) => {
+		chosen.forEach(async (m) => {
 			if (!connections.find((c) => c.exchange == m.exchange && c.type == m.type)) {
 				connections.push({
 					exchange: m.exchange,
@@ -63,7 +63,7 @@
 			const to_sub = chosen_markets
 				.filter((cm) => cm.exchange == c.exchange && cm.type == c.type)
 				.map((cm) => cm.market);
-			c.websocket.onopen = () => {
+			c.websocket.onopen = async () => {
 				c.websocket.send(get_trade_subscription_string(c.exchange, to_sub));
 			};
 

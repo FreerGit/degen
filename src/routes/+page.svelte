@@ -22,7 +22,7 @@
 					x: 20 * counter,
 					y: 0,
 					w: 20,
-					h: 19
+					h: 20
 				}),
 				id: id(),
 				data: {
@@ -41,7 +41,7 @@
 				x: prev ? prev[COLS].w * items.length : 0,
 				y: 0,
 				w: 20,
-				h: 19
+				h: 20
 			}),
 			id: id(),
 			data: {
