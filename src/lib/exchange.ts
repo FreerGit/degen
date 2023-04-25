@@ -11,7 +11,8 @@ export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 					return 'wss://stream.bybit.com/v5/public/inverse';
 				case 'linear':
 					return 'wss://stream.bybit.com/v5/public/linear';
-			}
+				}
+		// eslint-disable-next-line no-fallthrough
 		case 'Binance':
 			return 'wss://stream.binance.com:9443/ws';
 	}
