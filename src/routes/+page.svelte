@@ -73,9 +73,7 @@
 		fillSpace={true}
 		gap={[5, 0]}
 	>
-		<div class="h-full">
-			<OrderBook on_delete={() => remove_panel(dataItem)} order_book={dataItem.data.book} />
-		</div>
+			<OrderBook id={dataItem.id} on_delete={() => remove_panel(dataItem)} order_book={dataItem.data.book} />
 	</Grid>
 
 	{#if browser}
