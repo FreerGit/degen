@@ -15,12 +15,12 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
 	import { Tooltip } from 'svelte-tooltip-simple';
+	import { onInterval } from '$lib/utils';
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
 	export let id: string;
 
 	let ws: WebSocket;
-	let ping_interval: NodeJS.Timeout;
 
 	const scroll_to_center = () => {
 		const delta_element = document.getElementById(`mid-point-${id}`);
@@ -31,19 +31,21 @@
 		});
 	};
 
-	onDestroy(() => clearInterval(ping_interval));
+
+
+	onInterval(() => ws.send(JSON.stringify({"op": "ping"})), 20_000);
 
 	onMount(async () => {
 		const endpoint = order_book.get_endpoint();
 		const sub = order_book.get_subscribe_args();
 		ws = new WebSocket(endpoint);
+
 		ws.onopen = () => {
 			ws.send(`{"op": "subscribe", "args": ["${sub}"]}`);
 		};
-		ping_interval = setInterval(() => {
-			ws.send(JSON.stringify({"op": "ping"}));
-			console.log("sending")
-		}, 20_000);
+
+
+
 		ws.onmessage = (message) => {
 			// convert asks and bids to numbers
 			let json: Payload = JSON.parse(message.data, function (key, value) {
