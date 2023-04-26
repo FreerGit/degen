@@ -1,3 +1,4 @@
+import { get_binance_markets } from '$lib/binance/get_markets';
 import { get_bybit_markets } from '$lib/bybit/get_market';
 import type { Exchange } from '$lib/types';
 
@@ -18,5 +19,10 @@ export type MarketInfo = {
 };
 
 export const get_markets = async (): Promise<MarketsPerExchange> => {
-	return await get_bybit_markets();
+	const markets = await Promise.all([
+		get_bybit_markets(),
+		get_binance_markets(),
+	])
+	
+	return markets.flat(1);
 };

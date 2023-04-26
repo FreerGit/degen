@@ -5,6 +5,10 @@
 Feeds should not render as chunks of list but rather singles, maybe stagger? - has to be smoother
 colors based on difference from min - tresholds or only min size
 
+
+## Next
+rewrite trade_feed and use classes like order book, abstract out
+
 ## Large
 
 - [ ] switch to v5 bybit api use exchange.ts
@@ -27,6 +31,9 @@ colors based on difference from min - tresholds or only min size
 
 - [ ] Make the drag icon on the orderbook larger and white
 - [ ] Trade feed should be scaling color from min
+
+## Bugs
+- [ ] Trade feed filter removes same symbol for all exchanges on select
 
 ## Issues
 

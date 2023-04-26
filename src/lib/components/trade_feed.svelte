@@ -60,34 +60,17 @@
 		console.log(connections);
 
 		connections.forEach((c) => {
+			console.log(chosen_markets)
+			console.log(c)
 			const to_sub = chosen_markets
 				.filter((cm) => cm.exchange == c.exchange && cm.type == c.type)
 				.map((cm) => cm.market);
+			console.log(to_sub);
 			c.websocket.onopen = async () => {
 				c.websocket.send(get_trade_subscription_string(c.exchange, to_sub));
 			};
 
-			c.websocket.onmessage = (message) => {
-				let json: Payload = JSON.parse(message.data);
-				match(json)
-					.with({ data: P.array({ S: P.string }) }, () => {
-						(json as Trades).data.forEach((i) => {
-							i.type = c.type; // inverse has usd dom.
-							if (i.type == 'inverse') {
-								if (+i.v > options.min_size) {
-									//
-									data_feed = push_front(data_feed, i);
-								}
-							} else {
-								if (i.v * i.p > options.min_size) {
-									data_feed = push_front(data_feed, i);
-								}
-							}
-						});
-					})
-					.with({ success: P.boolean }, () => {})
-					.run();
-			};
+			c.websocket.onmessage = (message) => handle_trade_message_per_exchange(message.data, c.exchange);
 		});
 	};
 

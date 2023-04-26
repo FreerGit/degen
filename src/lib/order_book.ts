@@ -31,7 +31,11 @@ abstract class AbstractOrderBook {
 
 	abstract get_endpoint(): string;
 
-	abstract get_subscribe_args(): string;
+	abstract get_subscribe_string(): string;
+
+	abstract get_ping_string(): string;
+
+	abstract handle_message(message: string): void;
 
 	abstract update_delta(data: OrderBook): void;
 

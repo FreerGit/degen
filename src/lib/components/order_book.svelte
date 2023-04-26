@@ -7,15 +7,14 @@
 <script lang="ts">
 	import Center from '$lib/assets/center.svelte';
 	import Trashbin from '$lib/assets/trashbin.svelte';
-	import type { Level } from '$lib/bybit/order_book';
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { number_as_k } from '$lib/math';
 	import type { AbstractOrderBook } from '$lib/order_book';
-	import type { Delta, Payload, Snapshot } from '$lib/types';
-	import { onDestroy, onMount } from 'svelte';
-	import { match, P } from 'ts-pattern';
+	import {  onMount } from 'svelte';
+
 	import { Tooltip } from 'svelte-tooltip-simple';
 	import { onInterval } from '$lib/utils';
+
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
 	export let id: string;
@@ -31,52 +30,16 @@
 		});
 	};
 
-
-
-	onInterval(() => ws.send(JSON.stringify({"op": "ping"})), 20_000);
+	onInterval(() => ws.send(order_book.get_ping_string()), 20_000);
 
 	onMount(async () => {
 		const endpoint = order_book.get_endpoint();
-		const sub = order_book.get_subscribe_args();
 		ws = new WebSocket(endpoint);
 
-		ws.onopen = () => {
-			ws.send(`{"op": "subscribe", "args": ["${sub}"]}`);
-		};
+		ws.onopen = () => 
+			ws.send(order_book.get_subscribe_string());
 
-
-
-		ws.onmessage = (message) => {
-			// convert asks and bids to numbers
-			let json: Payload = JSON.parse(message.data, function (key, value) {
-				if (key === 'a') {
-					return value.map((lvl: Level) => {
-						return [+lvl[0], +lvl[1]];
-					});
-				}
-				if (key === 'b') {
-					return value.map((lvl: Level) => {
-						return [+lvl[0], +lvl[1]];
-					});
-				}
-				return value;
-			});
-			match(json)
-				.with({ type: 'delta' }, () => {
-					order_book.update_delta((json as Delta).data);
-					order_book.asks = order_book.asks;
-					order_book.bids = order_book.bids;
-				})
-				.with({ type: 'snapshot' }, () => {
-					order_book.snapshot((json as Snapshot).data);
-					order_book.asks = order_book.asks;
-					order_book.bids = order_book.bids;
-				})
-				.with({ success: P.boolean }, (e) => {
-					console.log(e);
-				})
-				.run();
-		};
+		ws.onmessage = (message) => order_book.handle_message(message.data);
 	});
 </script>
 

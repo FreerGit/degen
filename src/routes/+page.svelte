@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { BybitBook } from '$lib/bybit/order_book';
 	import { browser } from '$app/environment';
 	import { layoutStore } from '$lib/stores/layout';
 	import MenuButton from '$lib/components/menu_button.svelte';
@@ -8,6 +7,7 @@
 	import OrderBook from '$lib/components/order_book.svelte';
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
+	import { new_orderbook_instance } from '$lib/exchange';
 
 	const id = () => '_' + Math.random().toString(36).substr(2, 9);
 
@@ -26,7 +26,7 @@
 				}),
 				id: id(),
 				data: {
-					book: new BybitBook(m)
+					book: new_orderbook_instance(m)
 				}
 			};
 		});
@@ -45,7 +45,7 @@
 			}),
 			id: id(),
 			data: {
-				book: new BybitBook(m)
+				book: new_orderbook_instance(m),
 			}
 		});
 		items = items;
