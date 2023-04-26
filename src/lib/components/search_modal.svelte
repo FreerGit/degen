@@ -114,7 +114,7 @@
 								class="hover:bg-base-hover hover:cursor-default"
 								on:mousedown={() => remove_market(cm)}
 							>
-								{cm.market + ' ' + cm.type}
+								{cm.market + ' ' + cm.exchange + ' ' + cm.type}
 							</div>
 						{/each}
 					</div>

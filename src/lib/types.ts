@@ -1,4 +1,4 @@
-import type { DeleteLevel, Level, Side } from './bybit/order_book';
+import type { Level} from './bybit/order_book';
 import type { MarketType } from './markets/get_markets';
 
 export type Payload = Snapshot | Delta | Trades | Connection;
@@ -28,11 +28,8 @@ export type Delta = {
 	ts: number;
 };
 
-export type Updates = {
-	delete: Array<DeleteLevel>;
-	update: Array<Level>;
-	insert: Array<Level>;
-};
+
+export type Side = 'Buy' | 'Sell'
 
 export type Direction = 'PlusTick' | 'MinusTick ' | 'ZeroMinusTick' | 'ZeroPlusTick';
 

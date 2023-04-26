@@ -10,14 +10,13 @@
 	import Settings from '$lib/assets/settings.svelte';
 	import Search from '$lib/assets/search.svelte';
 	import Trashbin from '$lib/assets/trashbin.svelte';
-	import { push_front, rotate_array, type RotateArray } from '$lib/rotate_array';
 	import Modal from './modal.svelte';
 	import { onMount } from 'svelte';
 	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
 	import { get_exchange_endpoint, get_trade_subscription_string } from '$lib/exchange';
-	import { match, P } from 'ts-pattern';
 	import SearchModal from './search_modal.svelte';
-	import type { Exchange, Payload, Trades } from '$lib/types';
+	import type { Exchange,} from '$lib/types';
+	import { TradeFeed } from '$lib/trade_feed';
 
 	export let options: TradeFeedOption;
 
@@ -26,7 +25,8 @@
 	let search_modal_open = false;
 	let confirm_modal_open = false;
 
-	let data_feed: RotateArray = rotate_array(100);
+	let data_feed: TradeFeed = new TradeFeed(100, options.min_size);
+
 	let connections: Array<WebsockerPerEndpoint> = [];
 	let markets_to_display: Array<MarketInfo> = [];
 	let chosen_markets: Array<MarketInfo> = [];
@@ -70,7 +70,10 @@
 				c.websocket.send(get_trade_subscription_string(c.exchange, to_sub));
 			};
 
-			c.websocket.onmessage = (message) => handle_trade_message_per_exchange(message.data, c.exchange);
+			c.websocket.onmessage = (message) => {
+				data_feed.handle_trade(message.data, c.exchange, c.type);
+				data_feed = data_feed;
+			}
 		});
 	};
 
@@ -139,13 +142,14 @@
 	{/if}
 
 	<uL>
-		{#each data_feed.data as trade}
-			<li class={`${trade.S == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content`}>
-				{trade.p}
+		{#each data_feed.trades.data as trade}
+			<li class={`${trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content`}>
+				{trade.exchange}
+				{trade.price}
 				{#if trade.type == 'inverse'}
-					{number_as_k(trade.v, 1)}
+					{number_as_k(trade.size, 1)}
 				{:else}
-					{number_as_k(trade.v * trade.p, 1)}
+					{number_as_k(trade.size * trade.price, 1)}
 				{/if}
 				<!-- {trade.type} -->
 			</li>
