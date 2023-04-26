@@ -12,7 +12,7 @@
 	import { number_as_k } from '$lib/math';
 	import type { AbstractOrderBook } from '$lib/order_book';
 	import type { Delta, Payload, Snapshot } from '$lib/types';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { match, P } from 'ts-pattern';
 	import { Tooltip } from 'svelte-tooltip-simple';
 	export let order_book: AbstractOrderBook;
@@ -20,6 +20,7 @@
 	export let id: string;
 
 	let ws: WebSocket;
+	let ping_interval: NodeJS.Timeout;
 
 	const scroll_to_center = () => {
 		const delta_element = document.getElementById(`mid-point-${id}`);
@@ -30,6 +31,8 @@
 		});
 	};
 
+	onDestroy(() => clearInterval(ping_interval));
+
 	onMount(async () => {
 		const endpoint = order_book.get_endpoint();
 		const sub = order_book.get_subscribe_args();
@@ -37,6 +40,10 @@
 		ws.onopen = () => {
 			ws.send(`{"op": "subscribe", "args": ["${sub}"]}`);
 		};
+		ping_interval = setInterval(() => {
+			ws.send(JSON.stringify({"op": "ping"}));
+			console.log("sending")
+		}, 20_000);
 		ws.onmessage = (message) => {
 			// convert asks and bids to numbers
 			let json: Payload = JSON.parse(message.data, function (key, value) {
