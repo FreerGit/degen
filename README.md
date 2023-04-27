@@ -7,7 +7,7 @@ colors based on difference from min - tresholds or only min size
 
 
 ## Next
-rewrite trade_feed and use classes like order book, abstract out
+ctrl F for @TODO HERE 
 
 ## Large
 

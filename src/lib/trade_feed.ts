@@ -4,7 +4,7 @@ import type { MarketType } from "./markets/get_markets";
 import { rotate_array, type RotateArray } from "./rotate_array";
 import type { Exchange } from "./types";
 
-export class TradeFeed {
+export class TradeFeedHandler {
   trades: RotateArray;
   min_size: number;
 

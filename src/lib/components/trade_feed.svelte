@@ -16,7 +16,7 @@
 	import { get_exchange_endpoint, get_trade_subscription_string } from '$lib/exchange';
 	import SearchModal from './search_modal.svelte';
 	import type { Exchange,} from '$lib/types';
-	import { TradeFeed } from '$lib/trade_feed';
+	import { TradeFeedHandler } from '$lib/trade_feed';
 
 	export let options: TradeFeedOption;
 
@@ -25,7 +25,7 @@
 	let search_modal_open = false;
 	let confirm_modal_open = false;
 
-	let data_feed: TradeFeed = new TradeFeed(100, options.min_size);
+	let data_feed: TradeFeedHandler = new TradeFeedHandler(100, options.min_size);
 
 	let connections: Array<WebsockerPerEndpoint> = [];
 	let markets_to_display: Array<MarketInfo> = [];
