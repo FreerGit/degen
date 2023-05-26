@@ -41,13 +41,9 @@ class BybitBook extends AbstractOrderBook {
 		match(json)
 			.with({ type: 'delta' }, () => {
 				this.update_delta((json as Delta).data);
-				this.asks = this.asks;
-				this.bids = this.bids;
 			})
 			.with({ type: 'snapshot' }, () => {
 				this.snapshot((json as Snapshot).data);
-				this.asks = this.asks;
-				this.bids = this.bids;
 			})
 			.with({ success: P.boolean }, (e) => {
 				console.log(e);

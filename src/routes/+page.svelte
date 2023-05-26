@@ -81,10 +81,9 @@
 		gap={[5, 0]}
 	>
 		{#if dataItem.data.book !== undefined}
-			<OrderBook id={dataItem.id} on_delete={() => remove_panel(dataItem)} order_book={dataItem.data.book} />
+			<OrderBook  id={dataItem.id} on_delete={() => remove_panel(dataItem)} order_book={dataItem.data.book} />
 		{:else if dataItem.data.trade_feed !== undefined}
 			<TradeFeed bind:options={$layoutStore.trade_feed} />
-
 		{/if}
 	</Grid>
 
