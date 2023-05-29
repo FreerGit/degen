@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	export type TradeFeedOption = Array<TFO>
+	export type TradeFeedOption = Array<TFO>;
 	export type TFO = {
 		min_size: number;
 		markets: Array<MarketInfo>;
@@ -8,21 +8,18 @@
 
 <script lang="ts">
 	import { number_as_k } from '$lib/math';
-	import Settings from '$lib/assets/settings.svelte';
-	import Search from '$lib/assets/search.svelte';
 	import Trashbin from '$lib/assets/trashbin.svelte';
 	import Modal from './modal.svelte';
 	import { onMount } from 'svelte';
 	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
 	import { get_exchange_endpoint, get_trade_subscription_string } from '$lib/exchange';
 	import SearchModal from './search_modal.svelte';
-	import type { Exchange,} from '$lib/types';
+	import type { Exchange } from '$lib/types';
 	import { TradeFeedHandler } from '$lib/trade_feed';
 	import { Tooltip } from 'svelte-tooltip-simple';
 
 	export let options: TFO;
 	export let on_delete: (item: any) => void;
-
 
 	let settings_modal_open = false;
 	let settings_state = false;
@@ -72,7 +69,7 @@
 			c.websocket.onmessage = (message) => {
 				data_feed.handle_trade(message.data, c.exchange, c.type);
 				data_feed = data_feed;
-			}
+			};
 		});
 	};
 
@@ -95,7 +92,7 @@
 
 <div>
 	<Modal open={settings_modal_open} onClose={() => (settings_modal_open = false)} title="Settings">
-		<div class="flex ">
+		<div class="flex">
 			<div class="flex-1 pl-4 text-base-content">Minimum size</div>
 			<div class="pr-4">
 				<input
@@ -137,10 +134,10 @@
 			<span
 				on:pointerdown={(e) => e.stopPropagation()}
 				on:click={(item) => {
-						on_delete(item);
-						connections.forEach((c) => {
-							c.websocket.close();
-						})
+					on_delete(item);
+					connections.forEach((c) => {
+						c.websocket.close();
+					});
 				}}
 				class="remove cursor-pointer"
 			>

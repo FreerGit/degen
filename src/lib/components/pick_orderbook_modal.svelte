@@ -48,7 +48,7 @@
 			<h1 class="flex text-2xl w-full text-base-content pl-4 border-b text-left pb-2">{title}</h1>
 
 			<div class="flex h-full bg-base-300">
-				<div class="flex flex-col hover:bg-base-hover min-h-max justify-middle items-center  w-1/5">
+				<div class="flex flex-col hover:bg-base-hover min-h-max justify-middle items-center w-1/5">
 					<p class="text-base-content text-l">Exchanges</p>
 					{#each ExchangeValues as Ex}
 						<div class="flex space-x-2">

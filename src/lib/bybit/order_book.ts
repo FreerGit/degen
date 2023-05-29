@@ -16,11 +16,14 @@ class BybitBook extends AbstractOrderBook {
 	}
 
 	get_subscribe_string(): string {
-		return `{"op": "subscribe", "args": ["${add_orderbook_pair_suffix(this.market_info.exchange, this.market_info.market)}"]}`;
+		return `{"op": "subscribe", "args": ["${add_orderbook_pair_suffix(
+			this.market_info.exchange,
+			this.market_info.market
+		)}"]}`;
 	}
 
 	get_ping_string(): string {
-		return JSON.stringify({ "op": "ping" });
+		return JSON.stringify({ op: 'ping' });
 	}
 
 	handle_message(message: string): void {
@@ -37,7 +40,7 @@ class BybitBook extends AbstractOrderBook {
 			}
 			return value;
 		});
-		
+
 		match(json)
 			.with({ type: 'delta' }, () => {
 				this.update_delta((json as Delta).data);
@@ -49,8 +52,7 @@ class BybitBook extends AbstractOrderBook {
 				console.log(e);
 			})
 			.run();
-	};
-	
+	}
 
 	snapshot(data: OrderBook): void {
 		data.b.forEach((lvl: Level) => {

@@ -15,7 +15,10 @@ class BinanceBook extends AbstractOrderBook {
 	}
 
 	get_subscribe_string(): string {
-		return `{"method": "SUBSCRIBE", "params": ["${add_orderbook_pair_suffix(this.market_info.exchange, this.market_info.market)}"]}`;
+		return `{"method": "SUBSCRIBE", "params": ["${add_orderbook_pair_suffix(
+			this.market_info.exchange,
+			this.market_info.market
+		)}"]}`;
 	}
 
 	get_ping_string(): string {
@@ -51,7 +54,7 @@ class BinanceBook extends AbstractOrderBook {
 				console.log(e);
 			})
 			.run();
-	};
+	}
 
 	snapshot(data: OrderBook): void {
 		data.b.forEach((lvl: Level) => {

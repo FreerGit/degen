@@ -1,5 +1,5 @@
-import type { MarketType } from "./markets/get_markets";
-import type { Exchange, Side } from "./types";
+import type { MarketType } from './markets/get_markets';
+import type { Exchange, Side } from './types';
 
 export type RotateArray = {
 	size: number;
@@ -7,12 +7,12 @@ export type RotateArray = {
 };
 
 export type Trade = {
-	size: number,
-	price: number,
-	side: Side,
-	type: MarketType,
-	exchange: Exchange,
-}
+	size: number;
+	price: number;
+	side: Side;
+	type: MarketType;
+	exchange: Exchange;
+};
 
 export const rotate_array = (size: number): RotateArray => {
 	return { size, data: [] };

@@ -19,10 +19,7 @@ export type MarketInfo = {
 };
 
 export const get_markets = async (): Promise<MarketsPerExchange> => {
-	const markets = await Promise.all([
-		get_bybit_markets(),
-		get_binance_markets(),
-	])
-	
+	const markets = await Promise.all([get_bybit_markets(), get_binance_markets()]);
+
 	return markets.flat(1);
 };

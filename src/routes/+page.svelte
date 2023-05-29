@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	export type PanelType = 'OB' | 'Trade'
+	export type PanelType = 'OB' | 'Trade';
 </script>
 
 <script lang="ts">
@@ -32,7 +32,7 @@
 				id: id(),
 				data: {
 					book: new_orderbook_instance(m),
-					trade_feed: undefined,
+					trade_feed: undefined
 				}
 			};
 		});
@@ -49,7 +49,7 @@
 				id: id(),
 				data: {
 					book: undefined,
-					trade_feed: new TradeFeedHandler(100, tfo),
+					trade_feed: new TradeFeedHandler(100, tfo)
 				}
 			};
 		});
@@ -71,7 +71,10 @@
 			id: id(),
 			data: {
 				book: panel_type == 'OB' ? new_orderbook_instance(m[0]) : undefined,
-				trade_feed: panel_type == 'Trade' ? new TradeFeedHandler(100, {min_size: 15000, markets: m}) : undefined
+				trade_feed:
+					panel_type == 'Trade'
+						? new TradeFeedHandler(100, { min_size: 15000, markets: m })
+						: undefined
 			}
 		});
 		items = items;
@@ -80,7 +83,7 @@
 
 	const remove_ob = (item: any) => {
 		items = items.filter((value) => value.id !== item.id);
-		console.log(item.data)
+		console.log(item.data);
 
 		const new_layout = $layoutStore.order_book.markets.filter(
 			(i) => i !== item.data.book.market_info
@@ -90,13 +93,11 @@
 
 	const remove_tf = (item: any) => {
 		items = items.filter((value) => value.id !== item.id);
-		console.log(item.data)
-		const new_layout = $layoutStore.trade_feeds.filter(
-			(i) => {
-				console.log(i)
-				return i !== item.data.trade_feed.tfo
-			}
-		);
+		console.log(item.data);
+		const new_layout = $layoutStore.trade_feeds.filter((i) => {
+			console.log(i);
+			return i !== item.data.trade_feed.tfo;
+		});
 		$layoutStore.trade_feeds = new_layout;
 	};
 
@@ -114,7 +115,11 @@
 		gap={[5, 0]}
 	>
 		{#if dataItem.data.book !== undefined}
-			<OrderBook  id={dataItem.id} on_delete={() => remove_ob(dataItem)} order_book={dataItem.data.book} />
+			<OrderBook
+				id={dataItem.id}
+				on_delete={() => remove_ob(dataItem)}
+				order_book={dataItem.data.book}
+			/>
 		{:else if dataItem.data.trade_feed !== undefined}
 			<TradeFeed options={dataItem.data.trade_feed.tfo} on_delete={() => remove_tf(dataItem)} />
 		{/if}

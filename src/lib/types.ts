@@ -1,4 +1,4 @@
-import type { Level} from './bybit/order_book';
+import type { Level } from './bybit/order_book';
 import type { MarketType } from './markets/get_markets';
 
 export type Payload = Snapshot | Delta | Trades | Connection;
@@ -28,8 +28,7 @@ export type Delta = {
 	ts: number;
 };
 
-
-export type Side = 'Buy' | 'Sell'
+export type Side = 'Buy' | 'Sell';
 
 export type Direction = 'PlusTick' | 'MinusTick ' | 'ZeroMinusTick' | 'ZeroPlusTick';
 
@@ -52,4 +51,4 @@ export type Trade = {
 
 export const ExchangeValues = ['Bybit', 'Binance'] as const;
 
-export type Exchange = typeof ExchangeValues[number];
+export type Exchange = (typeof ExchangeValues)[number];

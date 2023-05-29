@@ -10,7 +10,7 @@
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { number_as_k } from '$lib/math';
 	import type { AbstractOrderBook } from '$lib/order_book';
-	import {  onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	import { Tooltip } from 'svelte-tooltip-simple';
 	import { onInterval } from '$lib/utils';
@@ -36,13 +36,12 @@
 		const endpoint = order_book.get_endpoint();
 		ws = new WebSocket(endpoint);
 
-		ws.onopen = () => 
-			ws.send(order_book.get_subscribe_string());
+		ws.onopen = () => ws.send(order_book.get_subscribe_string());
 
-		ws.onmessage = (message) => { 
+		ws.onmessage = (message) => {
 			order_book.handle_message(message.data);
 			order_book = order_book;
-		}
+		};
 	});
 </script>
 

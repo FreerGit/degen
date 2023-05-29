@@ -5,9 +5,9 @@
 Feeds should not render as chunks of list but rather singles, maybe stagger? - has to be smoother
 colors based on difference from min - tresholds or only min size
 
-
 ## Next
-ctrl F for @TODO HERE 
+
+ctrl F for @TODO HERE
 
 ## Large
 
@@ -33,6 +33,7 @@ ctrl F for @TODO HERE
 - [ ] Trade feed should be scaling color from min
 
 ## Bugs
+
 - [ ] Trade feed filter removes same symbol for all exchanges on select
 
 ## Issues

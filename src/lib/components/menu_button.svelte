@@ -27,9 +27,11 @@
 	let button_style = 'flex min-w-full px-4 py-2 hover:bg-base-hover text-base-content';
 </script>
 
-
-<PickTradeFeedModal bind:open={add_trade_feed_modal} {options} update={(m) => handle_panel(m, 'Trade')} />
-
+<PickTradeFeedModal
+	bind:open={add_trade_feed_modal}
+	{options}
+	update={(m) => handle_panel(m, 'Trade')}
+/>
 
 <PickOrderbookModal
 	bind:open={add_ob_modal}
@@ -49,8 +51,7 @@
 		class="absolute bottom-20 right-6 w-48 py-2 mt-1 bg-base-200 rounded shadow-md"
 		style="z-index: 1000;"
 	>
-
-	<!-- @TODO HERE, rewrite the modal and create pick_trade_feed_modal.... -->
+		<!-- @TODO HERE, rewrite the modal and create pick_trade_feed_modal.... -->
 		<button
 			on:click={() => {
 				add_trade_feed_modal = true;

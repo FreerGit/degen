@@ -10,9 +10,8 @@ export const new_orderbook_instance = (m: MarketInfo): AbstractOrderBook => {
 			return new BybitBook(m);
 		case 'Binance':
 			return new BinanceBook(m);
-		}
-}
-
+	}
+};
 
 export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 	switch (exchange) {
@@ -24,7 +23,7 @@ export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 					return 'wss://stream.bybit.com/v5/public/inverse';
 				case 'linear':
 					return 'wss://stream.bybit.com/v5/public/linear';
-				}
+			}
 		// eslint-disable-next-line no-fallthrough
 		case 'Binance':
 			switch (type) {
@@ -33,7 +32,7 @@ export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 				case 'linear':
 					return 'wss://fstream.binance.com/ws';
 				case 'inverse':
-					console.error("Binance does not have inverse?");
+					console.error('Binance does not have inverse?');
 					return '';
 			}
 	}
@@ -56,7 +55,6 @@ export const add_orderbook_pair_suffix = (exchange: Exchange, market: string): s
 			return `${market}@depth20@100ms`;
 	}
 };
-
 
 export const get_trade_subscription_string = (
 	exchange: Exchange,
