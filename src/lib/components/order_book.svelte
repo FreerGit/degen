@@ -39,7 +39,10 @@
 		ws.onopen = () => 
 			ws.send(order_book.get_subscribe_string());
 
-		ws.onmessage = (message) => order_book.handle_message(message.data);
+		ws.onmessage = (message) => { 
+			order_book.handle_message(message.data);
+			order_book = order_book;
+		}
 	});
 </script>
 

@@ -30,7 +30,6 @@ export const handle_binance_trade_message = (feed: TradeFeed, msg: string, type:
     .with({ e: P.string }, (t) => {
         if (type == 'inverse') {
           if (+t.q > feed.min_size) {
-            console.log(trade)
             feed.trades = push_front(feed.trades, {
               price: t.p,
               size: t.q,

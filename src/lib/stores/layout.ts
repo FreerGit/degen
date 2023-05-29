@@ -4,27 +4,28 @@ import type { TradeFeedOption } from '$lib/components/trade_feed.svelte';
 import { writable } from 'svelte/store';
 
 interface Layout {
-	trade_feed: TradeFeedOption;
+	trade_feeds: TradeFeedOption;
 	order_book: OrderBookOptions;
 }
 
-// @TODO the trade. and orderBookL2_25 part is hardcoded, later this will be a match depending on exchange.
 let layout = {
-	trade_feed: {
-		min_size: 15000,
-		markets: [
-			{
-				exchange: 'Bybit',
-				type: 'linear',
-				market: 'BTCUSDT'
-			},
-			{
-				exchange: 'Bybit',
-				type: 'inverse',
-				market: 'BTCUSD'
-			}
-		]
-	},
+	trade_feeds: [
+		{
+			min_size: 15000,
+			markets: [
+				{
+					exchange: 'Bybit',
+					type: 'linear',
+					market: 'BTCUSDT'
+				},
+				{
+					exchange: 'Binance',
+					type: 'linear',
+					market: 'BTCUSDT'
+				}
+			]
+		}
+	],
 	order_book: {
 		markets: [
 			{

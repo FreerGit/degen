@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
-	export type TradeFeedOption = {
+	export type TradeFeedOption = Array<TFO>
+	export type TFO = {
 		min_size: number;
 		markets: Array<MarketInfo>;
 	};
@@ -17,15 +18,17 @@
 	import SearchModal from './search_modal.svelte';
 	import type { Exchange,} from '$lib/types';
 	import { TradeFeedHandler } from '$lib/trade_feed';
+	import { Tooltip } from 'svelte-tooltip-simple';
 
-	export let options: TradeFeedOption;
+	export let options: TFO;
+	export let on_delete: (item: any) => void;
+
 
 	let settings_modal_open = false;
 	let settings_state = false;
 	let search_modal_open = false;
-	let confirm_modal_open = false;
 
-	let data_feed: TradeFeedHandler = new TradeFeedHandler(100, options.min_size);
+	let data_feed: TradeFeedHandler = new TradeFeedHandler(100, options);
 
 	let connections: Array<WebsockerPerEndpoint> = [];
 	let markets_to_display: Array<MarketInfo> = [];
@@ -57,15 +60,11 @@
 			}
 		});
 
-		console.log(connections);
-
 		connections.forEach((c) => {
-			console.log(chosen_markets)
-			console.log(c)
-			const to_sub = chosen_markets
+			const to_sub = chosen
 				.filter((cm) => cm.exchange == c.exchange && cm.type == c.type)
 				.map((cm) => cm.market);
-			console.log(to_sub);
+
 			c.websocket.onopen = async () => {
 				c.websocket.send(get_trade_subscription_string(c.exchange, to_sub));
 			};
@@ -90,7 +89,6 @@
 	};
 
 	onMount(async () => {
-		chosen_markets = options.markets;
 		update_subscriptions(options.markets);
 	});
 </script>
@@ -123,21 +121,33 @@
 <div
 	on:mouseenter={() => (settings_state = true)}
 	on:mouseleave={() => (settings_state = false)}
-	class="flex flex-col w-40 max-h-screen overflow-y-auto no-scrollbar"
+	class="flex flex-col bg-red h-full max-h-screen overflow-y-auto no-scrollbar w-full"
 >
 	{#if settings_state}
-		<div class="fixed flex min-w-full bg-base-300">
-			<button on:click={() => (settings_modal_open = true)} class="text-white">
+		<div class="flex bg-base-300 min-w-full">
+			<!-- <button on:click={() => (settings_modal_open = true)} class="text-white">
 				<Settings />
-			</button>
+			</button> -->
 
-			<button on:click={() => (search_modal_open = true)} class="text-white">
+			<!-- <button on:click={() => (search_modal_open = true)} class="text-white">
 				<Search />
-			</button>
+			</button> -->
 
-			<button on:click={() => (confirm_modal_open = true)} class="text-white">
-				<Trashbin />
-			</button>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<span
+				on:pointerdown={(e) => e.stopPropagation()}
+				on:click={(item) => {
+						on_delete(item);
+						connections.forEach((c) => {
+							c.websocket.close();
+						})
+				}}
+				class="remove cursor-pointer"
+			>
+				<Tooltip text="Delete">
+					<Trashbin />
+				</Tooltip>
+			</span>
 		</div>
 	{/if}
 
@@ -151,7 +161,6 @@
 				{:else}
 					{number_as_k(trade.size * trade.price, 1)}
 				{/if}
-				<!-- {trade.type} -->
 			</li>
 		{/each}
 	</uL>

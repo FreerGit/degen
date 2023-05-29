@@ -13,6 +13,7 @@ export const new_orderbook_instance = (m: MarketInfo): AbstractOrderBook => {
 		}
 }
 
+
 export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 	switch (exchange) {
 		case 'Bybit':
@@ -66,7 +67,6 @@ export const get_trade_subscription_string = (
 		case 'Bybit':
 			return `{"op": "subscribe", "args": ${JSON.stringify(to_sub_array)}}`;
 		case 'Binance':
-			// console.log(`{"method": "SUBSCRIBE", "params": ${JSON.stringify(to_sub_array)}}`)
 			return `{"method": "SUBSCRIBE", "params": ${JSON.stringify(to_sub_array)}, "id": 1}`;
 	}
 };

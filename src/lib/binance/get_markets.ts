@@ -12,7 +12,6 @@ export const get_binance_markets = async (): Promise<MarketsPerExchange> => {
 		fetch('https://data.binance.com/api/v3/ticker/price'),
 	]);
 
-	// console.log(await markets_promises[0].json())
 	const [spot, linear]: Array<Array<ticker>> = await Promise.all(
 		markets_promises.map((v) => v.json())
 	);

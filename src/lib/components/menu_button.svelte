@@ -1,13 +1,15 @@
 <script lang="ts">
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { layoutStore } from '$lib/stores/layout';
-	import type { PanelType } from 'src/routes/+page.svelte';
+	import type { PanelType } from '../../routes/+page.svelte';
 	import PickOrderbookModal from './pick_orderbook_modal.svelte';
+	import PickTradeFeedModal from './pick_trade_feed_modal.svelte';
 
-	export let handle_panel: (m: MarketInfo, panel_type: PanelType) => void;
+	export let handle_panel: (m: Array<MarketInfo>, panel_type: PanelType) => void;
 	let is_fullscreen = false;
 	let open = false;
 	let add_ob_modal = false;
+	let add_trade_feed_modal = false;
 
 	const handle_fullscreen = () => {
 		if (is_fullscreen) {
@@ -21,15 +23,19 @@
 	const check_fullscreen = () => {
 		document.fullscreenElement ? (is_fullscreen = true) : (is_fullscreen = false);
 	};
-	let options = $layoutStore.trade_feed;
+	let options = $layoutStore.trade_feeds;
 	let button_style = 'flex min-w-full px-4 py-2 hover:bg-base-hover text-base-content';
 </script>
+
+
+<PickTradeFeedModal bind:open={add_trade_feed_modal} {options} update={(m) => handle_panel(m, 'Trade')} />
+
 
 <PickOrderbookModal
 	bind:open={add_ob_modal}
 	{options}
 	title={'Choose order book'}
-	update={(m) => handle_panel(m, 'OB')}
+	update={(m) => handle_panel([m], 'OB')}
 />
 
 {#if open}
@@ -47,7 +53,7 @@
 	<!-- @TODO HERE, rewrite the modal and create pick_trade_feed_modal.... -->
 		<button
 			on:click={() => {
-				add_ob_modal = true;
+				add_trade_feed_modal = true;
 				open = false;
 			}}
 			class={button_style}>Add Trade Feed</button
