@@ -28,7 +28,7 @@ export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 		case 'Binance':
 			switch (type) {
 				case 'spot':
-					return 'wss://data-stream.binance.com/ws';
+					return 'wss://stream.binance.com/ws';
 				case 'linear':
 					return 'wss://fstream.binance.com/ws';
 				case 'inverse':
@@ -52,7 +52,7 @@ export const add_orderbook_pair_suffix = (exchange: Exchange, market: string): s
 		case 'Bybit':
 			return `orderbook.50.${market}`;
 		case 'Binance':
-			return `${market}@depth20@100ms`;
+			return `${market.toLocaleLowerCase()}@depth20@100ms`;
 	}
 };
 

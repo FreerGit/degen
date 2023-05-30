@@ -3,20 +3,6 @@ import { push_front } from '$lib/rotate_array';
 import type { TradeFeed } from '$lib/trade_feed';
 import { match, P } from 'ts-pattern';
 
-type Payload = BinanceTrade | Ok;
-
-type Ok = {
-	id: number;
-	result: null;
-};
-
-type BinanceTrade = {
-	e: string;
-	p: number;
-	q: number;
-	m: boolean;
-};
-
 const buy_or_sell = (m: boolean) => {
 	if (m) return 'Sell';
 	else return 'Buy';

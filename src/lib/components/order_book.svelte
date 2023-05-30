@@ -30,7 +30,7 @@
 		});
 	};
 
-	onInterval(() => ws.send(order_book.get_ping_string()), 20_000);
+	// onInterval(() => ws.send(order_book.get_ping_string()), 20_000);
 
 	onMount(async () => {
 		const endpoint = order_book.get_endpoint();

@@ -1,7 +1,6 @@
 import { add_orderbook_pair_suffix, get_exchange_endpoint } from '$lib/exchange';
 import type { MarketInfo } from '$lib/markets/get_markets';
 import { AbstractOrderBook, type Level } from '$lib/order_book';
-import type { Delta, OrderBook, Payload, Snapshot } from '$lib/types';
 import { P, match } from 'ts-pattern';
 
 class BinanceBook extends AbstractOrderBook {
@@ -13,12 +12,12 @@ class BinanceBook extends AbstractOrderBook {
 	get_endpoint(): string {
 		return get_exchange_endpoint(this.market_info.exchange, this.market_info.type);
 	}
-
+	// {"method": "SUBSCRIBE", "params": ["btcusdt@trade"], "id": 1}
+	// {"method": "SUBSCRIBE","params": ["ETHUSDT@depth20@100ms"],"id": 1}
 	get_subscribe_string(): string {
-		return `{"method": "SUBSCRIBE", "params": ["${add_orderbook_pair_suffix(
-			this.market_info.exchange,
-			this.market_info.market
-		)}"]}`;
+		return `{"method": "SUBSCRIBE","params": 
+			["${add_orderbook_pair_suffix(this.market_info.exchange, this.market_info.market)}"], 
+			"id": 1}`;
 	}
 
 	get_ping_string(): string {
@@ -39,20 +38,18 @@ class BinanceBook extends AbstractOrderBook {
 			}
 			return value;
 		});
+		// @TODO HEREHRRERHE
 		match(json)
-			.with({ type: 'delta' }, () => {
-				this.update_delta((json as Delta).data);
+			.with({ lastUpdateId: P.number }, () => {
+				this.replace(json as Delta);
 				// this.asks = this.asks;
 				// this.bids = this.bids;
 			})
-			.with({ type: 'snapshot' }, () => {
-				this.snapshot((json as Snapshot).data);
-				// this.asks = this.asks;
-				// this.bids = this.bids;
+			.with({ e: 'depthUpdate' }, () => {
+				console.log('NOT IMPLEMENTED FUTURES');
 			})
-			.with({ success: P.boolean }, (e) => {
-				console.log(e);
-			})
+
+			.with({ result: null, id: 1 }, (_) => {})
 			.run();
 	}
 
@@ -65,22 +62,19 @@ class BinanceBook extends AbstractOrderBook {
 		});
 	}
 
-	update_delta(data: OrderBook): void {
-		data.b.forEach((lvl: Level) => {
-			if (lvl[1] == 0) {
-				this.bids.delete(lvl[0]);
-			} else {
-				this.bids.set(lvl[0], lvl[1]);
-			}
-		});
-		data.a.forEach((lvl: Level) => {
-			if (lvl[1] == 0) {
-				this.asks.delete(lvl[0]);
-			} else {
-				this.asks.set(lvl[0], lvl[1]);
-			}
-		});
+	replace(data: Orderbook): void {
+		this.bids.clear();
+		data.bids.forEach((i: Level) => this.bids.set(i[0], i[1]));
+		this.asks.clear();
+		data.asks.forEach((i: Level) => this.asks.set(i[0], i[1]));
+		this.update_values();
+	}
 
+	update_delta(data: OrderBook): void {
+		this.update_values();
+	}
+
+	update_values(): void {
 		let largest = 0;
 		this.delta =
 			this.bids.reduce((acc, lvl) => {
