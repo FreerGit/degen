@@ -5,7 +5,6 @@ import { P, match } from 'ts-pattern';
 import type { OrderBook, OrderBook_ } from './types';
 
 class BinanceBook extends AbstractOrderBook {
-
 	constructor(m: MarketInfo) {
 		super();
 		this.market_info = m;
@@ -85,8 +84,8 @@ class BinanceBook extends AbstractOrderBook {
 				}
 				return acc + lvl[1];
 			}, 0) -
-		this.asks.reduce((acc, lvl) => {
-				console.log(lvl)
+			this.asks.reduce((acc, lvl) => {
+				console.log(lvl);
 				if (lvl[1] > largest) {
 					largest = lvl[1];
 				}
@@ -94,7 +93,6 @@ class BinanceBook extends AbstractOrderBook {
 			}, 0);
 		this.highest_vol_level = largest;
 	}
-
 }
 
 export type { Level };

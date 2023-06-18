@@ -1,4 +1,4 @@
-import type { Level } from "./order_book";
+import type { Level } from './order_book';
 
 export type Payload = Snapshot | Delta | Trades | Connection;
 
@@ -25,4 +25,3 @@ export type OrderBook = {
 	bids: Array<Level>;
 	s: string;
 };
-

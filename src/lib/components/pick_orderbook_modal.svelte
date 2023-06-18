@@ -34,6 +34,8 @@
 		display = found;
 		options.markets = found;
 	};
+
+	$: searchable_exchanges && search_markets();
 </script>
 
 {#if open}
@@ -42,13 +44,13 @@
 	>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class="relative rounded bg-base-300 text-neutral-content h-3/4 w-3/5"
+			class="relative rounded bg-base-300 text-neutral-content h-2/4 w-3/5 max-w-xl"
 			style="z-index: 1000;"
 		>
-			<h1 class="flex text-2xl w-full text-base-content pl-4 border-b text-left pb-2">{title}</h1>
+			<h1 class="flex text-2xl w-full text-base-content justify-center border-b pb-2">{title}</h1>
 
 			<div class="flex h-full bg-base-300">
-				<div class="flex flex-col hover:bg-base-hover min-h-max justify-middle items-center w-1/5">
+				<div class="flex flex-col hover:bg-base-hover min-h-max pl-4 w-1/5 border-r">
 					<p class="text-base-content text-l">Exchanges</p>
 					{#each ExchangeValues as Ex}
 						<div class="flex space-x-2">
@@ -91,14 +93,13 @@
 							{/if}
 						</table>
 					</div>
-
-					<div class="flex-col flex text-base-content w-full overflow-y-scroll h-1/4">
+					<div class="flex-col flex text-base-content w-full h-1/5 pt-4 border-y">
 						{#if chosen}
 							{chosen.market + ' ' + chosen.type}
 						{/if}
 					</div>
 
-					<div class="absolute text-base-content bottom-0 right-0 pr-4">
+					<div class="absolute text-base-content right-0 pt-6 pr-6">
 						<button class="pr-4" on:click={() => (open = false)}> Cancel </button>
 						<button
 							class="bg-primary py-2 px-2 rounded"

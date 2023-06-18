@@ -50,7 +50,11 @@
 		<thead>
 			<tr>
 				<th class="text-base-content text-xs"
-					>{order_book.market_info.exchange + '/' + order_book.market_info.market}</th
+					>{order_book.market_info.exchange +
+						' ' +
+						order_book.market_info.type +
+						' ' +
+						order_book.market_info.market}</th
 				>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<th class="flex w-full">

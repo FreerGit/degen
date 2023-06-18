@@ -1,5 +1,5 @@
-import type { MarketType } from "$lib/markets/get_markets";
-import type { Level } from "./order_book";
+import type { MarketType } from '$lib/markets/get_markets';
+import type { Level } from './order_book';
 
 export type Payload = Snapshot | Delta | Trades | Connection;
 
