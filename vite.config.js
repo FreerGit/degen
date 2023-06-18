@@ -2,7 +2,6 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig(({ command }) => {
-	console.log(command);
 	if (command === 'serve') {
 		return {
 			plugins: [sveltekit()],

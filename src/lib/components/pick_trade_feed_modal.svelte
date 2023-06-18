@@ -5,6 +5,7 @@
 	import type { TradeFeedOption } from './trade_feed.svelte';
 
 	export let open: boolean;
+	export let title: string;
 	let display: Array<MarketInfo>;
 	let chosen: Array<MarketInfo> = [];
 	export let options: TradeFeedOption;
@@ -13,6 +14,8 @@
 	let search_market = '';
 	let searchable_exchanges: Array<string> = ExchangeValues.slice();
 	let markets = $markets_store;
+
+	$: searchable_exchanges && search_markets();
 
 	const search_markets = () => {
 		let found: Array<MarketInfo> = [];
@@ -41,12 +44,12 @@
 	};
 
 	const add_market = (info: MarketInfo) => {
-		display = display.filter((m) => m.market != info.market);
+		display = display.filter((m) => m !== info);
 		chosen = [...chosen, info];
 	};
 
 	const remove_market = (info: MarketInfo) => {
-		chosen = chosen.filter((m) => m.market != info.market);
+		chosen = chosen.filter((m) => m !== info);
 		display = [...display, info];
 	};
 </script>
@@ -57,13 +60,13 @@
 	>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div
-			class="relative rounded bg-base-300 text-neutral-content h-3/4 w-3/5"
+			class="relative rounded bg-base-300 text-neutral-content h-2/4 w-3/5 max-w-xl"
 			style="z-index: 1000;"
 		>
-			<!-- <h1 class="flex text-2xl w-full text-base-content pl-4 border-b text-left pb-2">{title}</h1> -->
+			<h1 class="flex text-2xl w-full text-base-content pl-4 border-b text-left pb-2">{title}</h1>
 
 			<div class="flex h-full bg-base-300">
-				<div class="flex flex-col hover:bg-base-hover min-h-max justify-middle items-center w-1/5">
+				<div class="flex flex-col hover:bg-base-hover min-h-max pl-4 w-1/5 border-r">
 					<p class="text-base-content text-l">Exchanges</p>
 					{#each ExchangeValues as Ex}
 						<div class="flex space-x-2">
@@ -107,7 +110,7 @@
 						</table>
 					</div>
 
-					<div class="flex-col flex text-base-content w-full overflow-y-scroll h-1/4">
+					<div class="flex-col flex text-base-content w-full overflow-y-scroll h-1/5 border-y">
 						{#each chosen as cm}
 							<div
 								class="hover:bg-base-hover hover:cursor-default"

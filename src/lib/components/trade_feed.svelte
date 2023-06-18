@@ -13,7 +13,6 @@
 	import { onMount } from 'svelte';
 	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
 	import { get_exchange_endpoint, get_trade_subscription_string } from '$lib/exchange';
-	import SearchModal from './search_modal.svelte';
 	import type { Exchange } from '$lib/types';
 	import { TradeFeedHandler } from '$lib/trade_feed';
 	import { Tooltip } from 'svelte-tooltip-simple';
@@ -106,15 +105,6 @@
 	</Modal>
 </div>
 
-<SearchModal
-	bind:open={search_modal_open}
-	title="Choose Markets"
-	display={markets_to_display}
-	chosen={chosen_markets}
-	{options}
-	update={handle_update}
-/>
-
 <div
 	on:mouseenter={() => (settings_state = true)}
 	on:mouseleave={() => (settings_state = false)}
@@ -122,14 +112,6 @@
 >
 	{#if settings_state}
 		<div class="flex bg-base-300 min-w-full">
-			<!-- <button on:click={() => (settings_modal_open = true)} class="text-white">
-				<Settings />
-			</button> -->
-
-			<!-- <button on:click={() => (search_modal_open = true)} class="text-white">
-				<Search />
-			</button> -->
-
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<span
 				on:pointerdown={(e) => e.stopPropagation()}

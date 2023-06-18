@@ -29,6 +29,7 @@
 
 <PickTradeFeedModal
 	bind:open={add_trade_feed_modal}
+	title="Choose markets for trade feed"
 	{options}
 	update={(m) => handle_panel(m, 'Trade')}
 />

@@ -85,7 +85,6 @@ class BinanceBook extends AbstractOrderBook {
 				return acc + lvl[1];
 			}, 0) -
 			this.asks.reduce((acc, lvl) => {
-				console.log(lvl);
 				if (lvl[1] > largest) {
 					largest = lvl[1];
 				}

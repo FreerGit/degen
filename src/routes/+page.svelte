@@ -83,8 +83,6 @@
 
 	const remove_ob = (item: any) => {
 		items = items.filter((value) => value.id !== item.id);
-		console.log(item.data);
-
 		const new_layout = $layoutStore.order_book.markets.filter(
 			(i) => i !== item.data.book.market_info
 		);
@@ -93,9 +91,7 @@
 
 	const remove_tf = (item: any) => {
 		items = items.filter((value) => value.id !== item.id);
-		console.log(item.data);
 		const new_layout = $layoutStore.trade_feeds.filter((i) => {
-			console.log(i);
 			return i !== item.data.trade_feed.tfo;
 		});
 		$layoutStore.trade_feeds = new_layout;

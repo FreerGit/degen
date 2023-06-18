@@ -38,7 +38,8 @@ ctrl F for @TODO HERE
 
 ## Issues
 
-Who handles subscriptions?
+Speedup: in binance book, change all to strings instead of numbers, have to convert everytime otherwise
+Speedup: in trade feed, have a static value that you clear and write too instead of copying
 
 ## Layout
 
