@@ -2,8 +2,10 @@ import { add_orderbook_pair_suffix, get_exchange_endpoint } from '$lib/exchange'
 import type { MarketInfo } from '$lib/markets/get_markets';
 import { AbstractOrderBook, type Level } from '$lib/order_book';
 import { P, match } from 'ts-pattern';
+import type { OrderBook, OrderBook_ } from './types';
 
 class BinanceBook extends AbstractOrderBook {
+
 	constructor(m: MarketInfo) {
 		super();
 		this.market_info = m;
@@ -25,28 +27,25 @@ class BinanceBook extends AbstractOrderBook {
 	}
 
 	handle_message(message: string): void {
-		const json: Payload = JSON.parse(message, function (key, value) {
-			if (key === 'asks') {
+		const json = JSON.parse(message, function (key, value) {
+			if (key === 'asks' || key === 'a') {
 				return value.map((lvl: Level) => {
 					return [+lvl[0], +lvl[1]];
 				});
 			}
-			if (key === 'bids') {
+			if (key === 'bids' || key === 'b') {
 				return value.map((lvl: Level) => {
 					return [+lvl[0], +lvl[1]];
 				});
 			}
 			return value;
 		});
-		// @TODO HEREHRRERHE
 		match(json)
 			.with({ lastUpdateId: P.number }, () => {
-				this.replace(json as Delta);
-				// this.asks = this.asks;
-				// this.bids = this.bids;
+				this.replace(json);
 			})
 			.with({ e: 'depthUpdate' }, () => {
-				console.log('NOT IMPLEMENTED FUTURES');
+				this.replace_(json);
 			})
 
 			.with({ result: null, id: 1 }, (_) => {})
@@ -54,15 +53,18 @@ class BinanceBook extends AbstractOrderBook {
 	}
 
 	snapshot(data: OrderBook): void {
-		data.b.forEach((lvl: Level) => {
-			this.bids.set(lvl[0], lvl[1]);
-		});
-		data.a.forEach((lvl: Level) => {
-			this.asks.set(lvl[0], lvl[1]);
-		});
+		throw new Error('Method not implemented.');
 	}
 
-	replace(data: Orderbook): void {
+	replace_(data: OrderBook_): void {
+		this.bids.clear();
+		data.b.forEach((i: Level) => this.bids.set(i[0], i[1]));
+		this.asks.clear();
+		data.a.forEach((i: Level) => this.asks.set(i[0], i[1]));
+		this.update_values();
+	}
+
+	replace(data: OrderBook): void {
 		this.bids.clear();
 		data.bids.forEach((i: Level) => this.bids.set(i[0], i[1]));
 		this.asks.clear();
@@ -83,7 +85,8 @@ class BinanceBook extends AbstractOrderBook {
 				}
 				return acc + lvl[1];
 			}, 0) -
-			this.asks.reduce((acc, lvl) => {
+		this.asks.reduce((acc, lvl) => {
+				console.log(lvl)
 				if (lvl[1] > largest) {
 					largest = lvl[1];
 				}
@@ -91,6 +94,7 @@ class BinanceBook extends AbstractOrderBook {
 			}, 0);
 		this.highest_vol_level = largest;
 	}
+
 }
 
 export type { Level };
