@@ -17,12 +17,12 @@
 
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
-	export let id: string;
+	export let id: number;
 
 	let ws: WebSocket;
 
 	const scroll_to_center = () => {
-		const delta_element = document.getElementById(`mid-point-${id}`);
+		const delta_element = document.getElementById(`mid-point-ob-${id}`);
 		delta_element?.scrollIntoView({
 			behavior: 'auto',
 			block: 'center',
@@ -102,7 +102,7 @@
 			{/each}
 		</tbody>
 
-		<tr class="scroll" id={`mid-point-${id}`}>
+		<tr class="scroll" id={`mid-point-ob-${id}`}>
 			<th class="flex" />
 			<th class="{order_book.delta > 0 ? 'text-primary' : 'text-accent'} text-2xs">
 				Δ {number_as_k(order_book.delta, 1)}

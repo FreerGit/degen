@@ -13,76 +13,36 @@
 	import { TradeFeedHandler } from '$lib/trade_feed';
 	import type { TFO } from '$lib/components/trade_feed.svelte';
 	import TradeFeed from '$lib/components/trade_feed.svelte';
-
-	const id = () => '_' + Math.random().toString(36).substr(2, 9);
-
-	const COLS = 100;
+	import { AbstractOrderBook } from '$lib/order_book';
 
 	const populate_default_layout = () => {
-		let counter = -1;
 		const obs = $layoutStore.order_book.markets.map((m: MarketInfo) => {
-			counter++;
-			return {
-				[COLS]: gridHelp.item({
-					x: 20 * counter,
-					y: 0,
-					w: 20,
-					h: 20
-				}),
-				id: id(),
-				data: {
-					book: new_orderbook_instance(m),
-					trade_feed: undefined
-				}
-			};
+			return new_orderbook_instance(m)
 		});
 
 		const tfs = $layoutStore.trade_feeds.map((tfo: TFO) => {
-			counter++;
-			return {
-				[COLS]: gridHelp.item({
-					x: 20 * counter,
-					y: 0,
-					w: 20,
-					h: 20
-				}),
-				id: id(),
-				data: {
-					book: undefined,
-					trade_feed: new TradeFeedHandler(100, tfo)
-				}
-			};
+			return new TradeFeedHandler(100, tfo)
 		});
 
 		return [...obs, ...tfs];
 	};
 
-	let items = populate_default_layout();
+	let component_list = populate_default_layout();
 
 	const add_panel = (m: Array<MarketInfo>, panel_type: PanelType) => {
-		const prev = items.at(-1);
-		items.push({
-			[COLS]: gridHelp.item({
-				x: prev ? prev[COLS].w * items.length : 0,
-				y: 0,
-				w: 20,
-				h: 20
-			}),
-			id: id(),
-			data: {
-				book: panel_type == 'OB' ? new_orderbook_instance(m[0]) : undefined,
-				trade_feed:
-					panel_type == 'Trade'
-						? new TradeFeedHandler(100, { min_size: 15000, markets: m })
-						: undefined
-			}
-		});
-		items = items;
-		$layoutStore.order_book.markets = [...$layoutStore.order_book.markets, ...m];
+		if(panel_type == 'Trade') {
+			const tfo = {min_size: 15000, markets: m};
+			component_list.push(new TradeFeedHandler(100, tfo));
+			$layoutStore.trade_feeds = [...$layoutStore.trade_feeds, tfo];
+		} else {
+			component_list.push(new_orderbook_instance(m[0]));
+			$layoutStore.order_book.markets = [...$layoutStore.order_book.markets, ...m];
+		}
+		component_list = component_list;
 	};
 
 	const remove_ob = (item: any) => {
-		items = items.filter((value) => value.id !== item.id);
+		component_list = component_list.filter((value) => value !== item);
 		const new_layout = $layoutStore.order_book.markets.filter(
 			(i) => i !== item.data.book.market_info
 		);
@@ -90,36 +50,28 @@
 	};
 
 	const remove_tf = (item: any) => {
-		items = items.filter((value) => value.id !== item.id);
+		component_list = component_list.filter((value) => value !== item);
 		const new_layout = $layoutStore.trade_feeds.filter((i) => {
 			return i !== item.data.trade_feed.tfo;
 		});
 		$layoutStore.trade_feeds = new_layout;
 	};
 
-	const cols = [[2000, COLS]];
 </script>
 
 <main class="flex flex-row min-h-full h-full min-w-full justify-between bg-base-100">
-	<Grid
-		bind:items
-		rowHeight={50}
-		let:dataItem
-		{cols}
-		fastStart={true}
-		fillSpace={true}
-		gap={[5, 0]}
-	>
-		{#if dataItem.data.book !== undefined}
+	{#each component_list as comp, index}
+		
+		{#if comp instanceof AbstractOrderBook}
 			<OrderBook
-				id={dataItem.id}
-				on_delete={() => remove_ob(dataItem)}
-				order_book={dataItem.data.book}
+			id={index}
+			on_delete={() => remove_ob(comp)}
+			order_book={comp}
 			/>
-		{:else if dataItem.data.trade_feed !== undefined}
-			<TradeFeed options={dataItem.data.trade_feed.tfo} on_delete={() => remove_tf(dataItem)} />
-		{/if}
-	</Grid>
+			{:else if comp instanceof TradeFeedHandler}
+			<TradeFeed options={comp.tfo} on_delete={() => remove_tf(comp)} />
+			{/if}
+		{/each}
 
 	<MenuButton handle_panel={add_panel} />
 </main>
