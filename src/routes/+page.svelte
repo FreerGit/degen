@@ -41,36 +41,38 @@
 		component_list = component_list;
 	};
 
-	const remove_ob = (item: any) => {
-		component_list = component_list.filter((value) => value !== item);
-		const new_layout = $layoutStore.order_book.markets.filter(
-			(i) => i !== item.data.book.market_info
-		);
-		$layoutStore.order_book.markets = new_layout;
-	};
-
-	const remove_tf = (item: any) => {
-		component_list = component_list.filter((value) => value !== item);
-		const new_layout = $layoutStore.trade_feeds.filter((i) => {
-			return i !== item.data.trade_feed.tfo;
-		});
-		$layoutStore.trade_feeds = new_layout;
+	const remove_comp = (item: AbstractOrderBook | TradeFeedHandler) => {
+		if(item instanceof AbstractOrderBook) {
+			component_list = component_list.filter((value) => !Object.is(value, item));
+			const new_layout = $layoutStore.order_book.markets.filter(
+				(i) => i !== item.market_info);
+			$layoutStore.order_book.markets = new_layout;		
+		}
+		else {
+			component_list = component_list.filter((value) => !Object.is(value, item));
+			const new_layout = $layoutStore.trade_feeds.filter((i) => {
+				return i !== item.tfo
+			});
+			$layoutStore.trade_feeds = new_layout;
+		}
 	};
 
 </script>
 
-<main class="flex flex-row min-h-full h-full min-w-full justify-between bg-base-100">
+<main class="flex flex-row h-full min-w-full  justify-between bg-base-100">
 	{#each component_list as comp, index}
-		
-		{#if comp instanceof AbstractOrderBook}
+		<div class="max-h-screen w-full border overflow-y-auto no-scrollbar">
+
+			{#if comp instanceof AbstractOrderBook}
 			<OrderBook
 			id={index}
-			on_delete={() => remove_ob(comp)}
+			on_delete={() => remove_comp(comp)}
 			order_book={comp}
 			/>
 			{:else if comp instanceof TradeFeedHandler}
-			<TradeFeed options={comp.tfo} on_delete={() => remove_tf(comp)} />
-			{/if}
+			<TradeFeed options={comp.tfo} on_delete={() => remove_comp(comp)} />
+				{/if}
+			</div>
 		{/each}
 
 	<MenuButton handle_panel={add_panel} />
