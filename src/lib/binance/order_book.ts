@@ -13,8 +13,7 @@ class BinanceBook extends AbstractOrderBook {
 	get_endpoint(): string {
 		return get_exchange_endpoint(this.market_info.exchange, this.market_info.type);
 	}
-	// {"method": "SUBSCRIBE", "params": ["btcusdt@trade"], "id": 1}
-	// {"method": "SUBSCRIBE","params": ["ETHUSDT@depth20@100ms"],"id": 1}
+
 	get_subscribe_string(): string {
 		return `{"method": "SUBSCRIBE","params": 
 			["${add_orderbook_pair_suffix(this.market_info.exchange, this.market_info.market)}"], 

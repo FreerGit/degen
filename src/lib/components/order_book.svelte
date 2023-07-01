@@ -13,7 +13,6 @@
 	import { onMount } from 'svelte';
 
 	import { Tooltip } from 'svelte-tooltip-simple';
-	import { onInterval } from '$lib/utils';
 
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
@@ -29,8 +28,6 @@
 			inline: 'center'
 		});
 	};
-
-	// onInterval(() => ws.send(order_book.get_ping_string()), 20_000);
 
 	onMount(async () => {
 		const endpoint = order_book.get_endpoint();

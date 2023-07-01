@@ -5,8 +5,6 @@
 <script lang="ts">
 	import { layoutStore } from '$lib/stores/layout';
 	import MenuButton from '$lib/components/menu_button.svelte';
-	import Grid from 'svelte-grid';
-	import gridHelp from 'svelte-grid/build/helper/index.mjs';
 	import OrderBook from '$lib/components/order_book.svelte';
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { new_orderbook_instance } from '$lib/exchange';
@@ -17,11 +15,11 @@
 
 	const populate_default_layout = () => {
 		const obs = $layoutStore.order_book.markets.map((m: MarketInfo) => {
-			return new_orderbook_instance(m)
+			return new_orderbook_instance(m);
 		});
 
 		const tfs = $layoutStore.trade_feeds.map((tfo: TFO) => {
-			return new TradeFeedHandler(100, tfo)
+			return new TradeFeedHandler(100, tfo);
 		});
 
 		return [...obs, ...tfs];
@@ -30,8 +28,8 @@
 	let component_list = populate_default_layout();
 
 	const add_panel = (m: Array<MarketInfo>, panel_type: PanelType) => {
-		if(panel_type == 'Trade') {
-			const tfo = {min_size: 15000, markets: m};
+		if (panel_type == 'Trade') {
+			const tfo = { min_size: 15000, markets: m };
 			component_list.push(new TradeFeedHandler(100, tfo));
 			$layoutStore.trade_feeds = [...$layoutStore.trade_feeds, tfo];
 		} else {
@@ -42,38 +40,31 @@
 	};
 
 	const remove_comp = (item: AbstractOrderBook | TradeFeedHandler) => {
-		if(item instanceof AbstractOrderBook) {
+		if (item instanceof AbstractOrderBook) {
 			component_list = component_list.filter((value) => !Object.is(value, item));
-			const new_layout = $layoutStore.order_book.markets.filter(
-				(i) => i !== item.market_info);
-			$layoutStore.order_book.markets = new_layout;		
-		}
-		else {
+			const new_layout = $layoutStore.order_book.markets.filter((i) => i !== item.market_info);
+			$layoutStore.order_book.markets = new_layout;
+		} else {
 			component_list = component_list.filter((value) => !Object.is(value, item));
 			const new_layout = $layoutStore.trade_feeds.filter((i) => {
-				return i !== item.tfo
+				return i !== item.tfo;
 			});
 			$layoutStore.trade_feeds = new_layout;
 		}
 	};
-
 </script>
 
-<main class="flex flex-row h-full min-w-full  justify-between bg-base-100">
+<main class="flex flex-row h-full space-x-2 px-1 justify-between bg-base-100">
 	{#each component_list as comp, index}
-		<div class="max-h-screen w-full border overflow-y-auto no-scrollbar">
-
+		<div class="max-h-screen min-w-[150px] max-w-[20%] border overflow-y-auto no-scrollbar">
 			{#if comp instanceof AbstractOrderBook}
-			<OrderBook
-			id={index}
-			on_delete={() => remove_comp(comp)}
-			order_book={comp}
-			/>
+				<OrderBook id={index} on_delete={() => remove_comp(comp)} order_book={comp} />
 			{:else if comp instanceof TradeFeedHandler}
-			<TradeFeed options={comp.tfo} on_delete={() => remove_comp(comp)} />
-				{/if}
-			</div>
-		{/each}
+				<TradeFeed options={comp.tfo} on_delete={() => remove_comp(comp)} />
+			{/if}
+		</div>
+	{/each}
+	<div class="w-full" />
 
 	<MenuButton handle_panel={add_panel} />
 </main>

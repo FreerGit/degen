@@ -22,13 +22,10 @@
 
 	let settings_modal_open = false;
 	let settings_state = false;
-	let search_modal_open = false;
 
 	let data_feed: TradeFeedHandler = new TradeFeedHandler(100, options);
 
 	let connections: Array<WebsockerPerEndpoint> = [];
-	let markets_to_display: Array<MarketInfo> = [];
-	let chosen_markets: Array<MarketInfo> = [];
 
 	type WebsockerPerEndpoint = {
 		exchange: Exchange;
