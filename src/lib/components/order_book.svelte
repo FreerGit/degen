@@ -13,6 +13,7 @@
 	import { onMount } from 'svelte';
 
 	import { Tooltip } from 'svelte-tooltip-simple';
+	import ExchangeLogo from './exchange_logo.svelte';
 
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
@@ -42,86 +43,83 @@
 	});
 </script>
 
-<div class="flex bg-base-300 h-full w-full overflow-y-auto no-scrollbar">
-	<table class="table-auto">
-		<thead>
-			<tr>
-				<th class="text-base-content text-xs"
-					>{order_book.market_info.exchange +
-						' ' +
-						order_book.market_info.type +
-						' ' +
-						order_book.market_info.market}</th
+<div class="flex flex-col bg-base-300 h-full w-full overflow-y-auto no-scrollbar">
+	<!-- Header -->
+	<div class="px-1 flex flex-row w-full">
+			<div class="flex w-2/5">
+				<span class="remove cursor-pointer">
+					<Tooltip text={order_book.market_info.type + ' ' + order_book.market_info.market}>
+						<ExchangeLogo exchange={order_book.market_info.exchange} />
+					</Tooltip>
+				</span>
+		</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div class="flex w-2/5">
+			<span
+				on:pointerdown={(e) => e.stopPropagation()}
+				on:click={() => {
+					scroll_to_center();
+				}}
+				class="remove cursor-pointer"
+			>
+				<Tooltip text="Scroll to middle">
+					<Center />
+				</Tooltip>
+			</span>
+		</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div class="relative w-1/5 ">
+			<span
+				on:pointerdown={(e) => e.stopPropagation()}
+				on:click={(item) => {
+					on_delete(item);
+					ws.close();
+				}}
+				class="remove cursor-pointer "
+			>
+				<Tooltip text="Delete">
+					<Trashbin />
+				</Tooltip>
+			</span>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+		</div>
+	</div>
+
+	<!-- OB -->
+	<div class="w-full">
+		{#each order_book.asks.toArray() as [price, size]}
+			<div class="flex flex-row w-full px-1 text-2xs text-base-content">
+				<div class="w-2/5">{price}</div>
+				<div
+					class="w-3/5 bg-accent text-base-content "
+					style="width: {(size / order_book.highest_vol_level) * 60}%;"
 				>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<th class="flex w-full">
-					<span
-						on:pointerdown={(e) => e.stopPropagation()}
-						on:click={(item) => {
-							on_delete(item);
-							ws.close();
-						}}
-						class="remove cursor-pointer"
+					{size}
+				</div>
+			</div>
+		{/each}
+	</div>
+
+	<div class="scroll flex flex-row w-full" id={`mid-point-ob-${id}`}>
+		<div class="w-2/5"/>
+		<div class="w-3/5 {order_book.delta > 0 ? 'text-primary' : 'text-accent'} text-sm">
+			Δ {number_as_k(order_book.delta, 1)}
+		</div>
+	</div>
+
+	<div>
+		{#each order_book.bids.toArray() as [price, size]}
+			<div class="flex flex-row w-full px-1 text-2xs text-base-content">
+				<div class="w-2/5">{price}</div>
+				<div>
+					<div
+						class="w-3/5 bg-primary text-base-content"
+						style="width: {(size / order_book.highest_vol_level) * 100}%;"
 					>
-						<Tooltip text="Delete">
-							<Trashbin />
-						</Tooltip>
-					</span>
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<span
-						on:pointerdown={(e) => e.stopPropagation()}
-						on:click={() => {
-							scroll_to_center();
-						}}
-						class="remove cursor-pointer"
-					>
-						<Tooltip text="Scroll to middle">
-							<Center />
-						</Tooltip>
-					</span>
-				</th>
-			</tr>
-		</thead>
-
-		<tbody>
-			{#each order_book.asks.toArray() as [price, size]}
-				<tr class="w-full text-2xs text-base-content">
-					<td> {price} </td>
-					<td>
-						<div
-							class="bg-accent text-base-content"
-							style="width: {(size / order_book.highest_vol_level) * 100}%;"
-						>
-							{size}
-						</div>
-					</td>
-				</tr>
-			{/each}
-		</tbody>
-
-		<tr class="scroll" id={`mid-point-ob-${id}`}>
-			<th class="flex" />
-			<th class="{order_book.delta > 0 ? 'text-primary' : 'text-accent'} text-2xs">
-				Δ {number_as_k(order_book.delta, 1)}
-			</th>
-		</tr>
-
-		<tbody>
-			{#each order_book.bids.toArray() as [price, size]}
-				<tr class="w-full text-2xs text-base-content">
-					<td> {price} </td>
-					<td>
-						<div
-							class="bg-primary text-base-content"
-							style="width: {(size / order_book.highest_vol_level) * 100}%;"
-						>
-							{size}
-						</div>
-					</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
+						{size}
+					</div>
+				</div>
+			</div>
+		{/each}
+	</div>
 </div>
-
-<div />

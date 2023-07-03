@@ -16,12 +16,6 @@ ctrl F for @TODO HERE
 - [ ] liq feed
 - [ ] options for liq feed
 - [ ] trades delta over time
-- [ ] make both feeds removeable (only bybit)
-- [ ] make both feeds addable (only bybit)
-- [ ] make order books addable (only bybit)
-- [ ] make order books removable (only bybit)
-- [ ] polish feeds
-- [ ] polish order book
 - [ ] add coinbase order books
 - [ ] add coinbase liq feed
 - [ ] add coinbase trade feed
@@ -29,17 +23,8 @@ ctrl F for @TODO HERE
 
 ## UI work
 
-- [ ] Make the drag icon on the orderbook larger and white
 - [ ] Trade feed should be scaling color from min
-
-## Bugs
-
-- [ ] Trade feed filter removes same symbol for all exchanges on select
-
-## Issues
-
-Speedup: in binance book, change all to strings instead of numbers, have to convert everytime otherwise
-Speedup: in trade feed, have a static value that you clear and write too instead of copying
+- [ ] Remove table as rep. for order books, easier to line up.
 
 ## Layout
 
