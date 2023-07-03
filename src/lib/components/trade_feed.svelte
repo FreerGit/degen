@@ -16,6 +16,7 @@
 	import type { Exchange } from '$lib/types';
 	import { TradeFeedHandler } from '$lib/trade_feed';
 	import { Tooltip } from 'svelte-tooltip-simple';
+	import ExchangeLogo from './exchange_logo.svelte';
 
 	export let options: TFO;
 	export let on_delete: (item: any) => void;
@@ -127,17 +128,17 @@
 		</div>
 	{/if}
 
-	<uL>
+	<div>
 		{#each data_feed.trades.data as trade}
-			<li class={`${trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content`}>
-				{trade.exchange}
+			<div class={`${trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content flex flex-row`}>
+				<ExchangeLogo exchange={trade.exchange}/>
 				{trade.price}
 				{#if trade.type == 'inverse'}
 					{number_as_k(trade.size, 1)}
 				{:else}
 					{number_as_k(trade.size * trade.price, 1)}
 				{/if}
-			</li>
+			</div>
 		{/each}
-	</uL>
+		</div>
 </div>
