@@ -9,6 +9,6 @@
 {#if exchange == 'Binance'}
 	<Binance />
 {:else if exchange == 'Bybit'}
-	<Bybit/>
-<!-- <img width="20px" height="20px" src="src/lib/assets/bybit.png" alt={exchange}/> -->
+	<Bybit />
+	<!-- <img width="20px" height="20px" src="src/lib/assets/bybit.png" alt={exchange}/> -->
 {/if}

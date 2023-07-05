@@ -130,24 +130,27 @@
 
 	<div class="w-full text-">
 		{#each data_feed.trades.data as trade}
+			<div
+				class={`${
+					trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'
+				} text-base-content flex flex-row`}
+			>
+				<div class="w-1/6">
+					<ExchangeLogo exchange={trade.exchange} />
+				</div>
 
-		<div class={`${trade.side == 'Buy' ? 'bg-primary' : 'bg-accent'} text-base-content flex flex-row`}>
-			<div class="w-1/6">
-				<ExchangeLogo exchange={trade.exchange}/>
-			</div>
+				<div class="w-3/6">
+					{+trade.price}
+				</div>
 
-			<div class="w-3/6">
-				{+trade.price}
+				<div class="w-2/6">
+					{#if trade.type == 'inverse'}
+						{number_as_k(trade.size, 1)}
+					{:else}
+						{number_as_k(trade.size * trade.price, 1)}
+					{/if}
+				</div>
 			</div>
-			
-			<div class="w-2/6">
-				{#if trade.type == 'inverse'}
-				{number_as_k(trade.size, 1)}
-				{:else}
-				{number_as_k(trade.size * trade.price, 1)}
-				{/if}
-		</div>
+		{/each}
 	</div>
-	{/each}
-</div>		
 </div>
