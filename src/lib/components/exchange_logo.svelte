@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Binance from '$lib/assets/binance.svelte';
+	import Okx from '$lib/assets/okx.svelte';
 	import type { Exchange } from '$lib/types';
 	import Bybit from '../assets/bybit.svelte';
 
@@ -10,5 +11,6 @@
 	<Binance />
 {:else if exchange == 'Bybit'}
 	<Bybit />
-	<!-- <img width="20px" height="20px" src="src/lib/assets/bybit.png" alt={exchange}/> -->
+{:else if exchange == 'OKX'}
+	<Okx />
 {/if}

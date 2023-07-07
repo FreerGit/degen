@@ -21,7 +21,7 @@
 		for (let i = 0; i < markets.length; i++) {
 			for (let j = 0; j < markets[i].markets.length; j++) {
 				if (
-					markets[i].markets[j].replace(regexPattern, "").startsWith(search_market.toUpperCase()) &&
+					markets[i].markets[j].replace(regexPattern, '').startsWith(search_market.toUpperCase()) &&
 					searchable_exchanges.includes(markets[i].exchange)
 				) {
 					found.push({
@@ -70,9 +70,7 @@
 						class="input input-success w-full h-12 bg-base-200 text-base-content pl-2 text-xl"
 					/>
 					<div class="h-1/2 overflow-y-scroll">
-						<table
-							class="table-auto pointer-events-auto text-base-content w-full pt-0.5"
-						>
+						<table class="table-auto pointer-events-auto text-base-content w-full pt-0.5">
 							<!-- class="text-base-content " -->
 							{#if search_market.length > 0}
 								{#each display as market, i}

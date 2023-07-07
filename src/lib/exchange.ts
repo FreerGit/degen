@@ -47,7 +47,7 @@ export const add_trade_pair_suffix = (exchange: Exchange, market: string): strin
 		case 'Binance':
 			return `${market.toLowerCase()}@trade`;
 		case 'OKX':
-			return JSON.stringify({channel: "trades", instId: market});
+			return JSON.stringify({ channel: 'trades', instId: market });
 	}
 };
 
