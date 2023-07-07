@@ -35,6 +35,8 @@ export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 					console.error('Binance does not have inverse?');
 					return '';
 			}
+		case 'OKX':
+			return 'wss://wsaws.okx.com:8443/ws/v5/public';
 	}
 };
 
@@ -44,6 +46,8 @@ export const add_trade_pair_suffix = (exchange: Exchange, market: string): strin
 			return `publicTrade.${market}`;
 		case 'Binance':
 			return `${market.toLowerCase()}@trade`;
+		case 'OKX':
+			return JSON.stringify({channel: "trades", instId: market});
 	}
 };
 
@@ -66,5 +70,7 @@ export const get_trade_subscription_string = (
 			return `{"op": "subscribe", "args": ${JSON.stringify(to_sub_array)}}`;
 		case 'Binance':
 			return `{"method": "SUBSCRIBE", "params": ${JSON.stringify(to_sub_array)}, "id": 1}`;
+		case 'OKX':
+			return `{"op": "subscribe", "args": [${to_sub_array}]}`;
 	}
 };

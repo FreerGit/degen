@@ -2,6 +2,7 @@ import { handle_binance_trade_message } from './binance/trade_feed';
 import { handle_bybit_trade_message } from './bybit/trade_feed';
 import type { TFO } from './components/trade_feed.svelte';
 import type { MarketType } from './markets/get_markets';
+import { handle_okx_trade_message } from './okx/trade_feed';
 import { rotate_array, type RotateArray } from './rotate_array';
 import type { Exchange } from './types';
 
@@ -24,6 +25,8 @@ export class TradeFeedHandler {
 			case 'Binance':
 				handle_binance_trade_message(this, msg, type);
 				break;
+			case 'OKX':
+				handle_okx_trade_message(this, msg, type);
 		}
 	};
 }
