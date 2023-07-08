@@ -1,5 +1,6 @@
 import { BinanceBook } from './binance/order_book';
 import { BybitBook } from './bybit/order_book';
+import { OKXBook } from './okx/order_book';
 import type { MarketInfo, MarketType } from './markets/get_markets';
 import type { AbstractOrderBook } from './order_book';
 import type { Exchange } from './types';
@@ -10,6 +11,8 @@ export const new_orderbook_instance = (m: MarketInfo): AbstractOrderBook => {
 			return new BybitBook(m);
 		case 'Binance':
 			return new BinanceBook(m);
+		case 'OKX':
+			return new OKXBook(m);
 	}
 };
 
@@ -35,8 +38,10 @@ export const get_exchange_endpoint = (exchange: Exchange, type: MarketType) => {
 					console.error('Binance does not have inverse?');
 					return '';
 			}
-		case 'OKX':
+		// eslint-disable-next-line no-fallthrough
+		case 'OKX': {
 			return 'wss://wsaws.okx.com:8443/ws/v5/public';
+		}
 	}
 };
 
@@ -57,6 +62,8 @@ export const add_orderbook_pair_suffix = (exchange: Exchange, market: string): s
 			return `orderbook.50.${market}`;
 		case 'Binance':
 			return `${market.toLocaleLowerCase()}@depth20@100ms`;
+		case 'OKX':
+			return `books`
 	}
 };
 

@@ -4,7 +4,7 @@ import type { TradeFeedHandler } from '$lib/trade_feed';
 import { match, P } from 'ts-pattern';
 import type { Payload, Trades } from './types';
 
-export const handle_okx_trade_message = (feed: TradeFeedHandler, msg: string, type: MarketType) => {
+export const handle_okx_trade_message = (feed: TradeFeedHandler, msg: string) => {
 	const json: Payload = JSON.parse(msg);
 	match(json)
 		.with({ data: P.array({ px: P.string }) }, () => {
