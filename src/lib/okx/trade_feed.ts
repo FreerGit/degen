@@ -1,4 +1,3 @@
-import type { MarketType } from '$lib/markets/get_markets';
 import { push_front } from '$lib/rotate_array';
 import type { TradeFeedHandler } from '$lib/trade_feed';
 import { match, P } from 'ts-pattern';

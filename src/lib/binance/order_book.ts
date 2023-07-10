@@ -50,6 +50,7 @@ class BinanceBook extends AbstractOrderBook {
 			.run();
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	snapshot(data: OrderBook): void {
 		throw new Error('Method not implemented.');
 	}
@@ -70,6 +71,7 @@ class BinanceBook extends AbstractOrderBook {
 		this.update_values();
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	update_delta(data: OrderBook): void {
 		this.update_values();
 	}

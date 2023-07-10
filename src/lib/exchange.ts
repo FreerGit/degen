@@ -63,7 +63,7 @@ export const add_orderbook_pair_suffix = (exchange: Exchange, market: string): s
 		case 'Binance':
 			return `${market.toLocaleLowerCase()}@depth20@100ms`;
 		case 'OKX':
-			return `books`
+			return `books`;
 	}
 };
 

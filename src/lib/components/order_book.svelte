@@ -10,14 +10,19 @@
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { number_as_k } from '$lib/math';
 	import type { AbstractOrderBook } from '$lib/order_book';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	import { Tooltip } from 'svelte-tooltip-simple';
 	import ExchangeLogo from './exchange_logo.svelte';
+	import { browser } from '$app/environment';
+	import LeftArrow from '$lib/assets/left_arrow.svelte';
+	import RightArrow from '$lib/assets/right_arrow.svelte';
 
 	export let order_book: AbstractOrderBook;
 	export let on_delete: (item: any) => void;
 	export let id: number;
+	export let on_left: () => void;
+	export let on_right: () => void;
 
 	let ws: WebSocket;
 
@@ -41,47 +46,69 @@
 			order_book = order_book;
 		};
 	});
+
+	onDestroy(async () => {
+		if (browser) {
+			ws.close();
+		}
+	});
 </script>
 
 <div class="flex flex-col bg-base-300 h-full w-full overflow-y-auto no-scrollbar">
 	<!-- Header -->
 	<div class="px-1 flex flex-row w-full">
-		<div class="flex w-2/5">
-			<span class="remove cursor-pointer">
+		<div class="flex w-2/6">
+			<div class="remove cursor-pointer">
 				<Tooltip text={order_book.market_info.type + ' ' + order_book.market_info.market}>
 					<ExchangeLogo exchange={order_book.market_info.exchange} />
 				</Tooltip>
-			</span>
+			</div>
+		</div>
+
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div
+			on:pointerdown={(e) => e.stopPropagation()}
+			on:click={() => on_left()}
+			class="remove cursor-pointer w-1/6"
+		>
+			<Tooltip text="Move Left">
+				<LeftArrow />
+			</Tooltip>
 		</div>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div class="flex w-2/5">
-			<span
-				on:pointerdown={(e) => e.stopPropagation()}
-				on:click={() => {
-					scroll_to_center();
-				}}
-				class="remove cursor-pointer"
-			>
-				<Tooltip text="Scroll to middle">
-					<Center />
-				</Tooltip>
-			</span>
+		<div
+			on:pointerdown={(e) => e.stopPropagation()}
+			on:click={() => scroll_to_center()}
+			class="remove cursor-pointer flex w-1/6"
+		>
+			<Tooltip text="Scroll to middle">
+				<Center />
+			</Tooltip>
 		</div>
+
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div class="relative w-1/5">
-			<span
-				on:pointerdown={(e) => e.stopPropagation()}
-				on:click={(item) => {
-					on_delete(item);
-					ws.close();
-				}}
-				class="remove cursor-pointer"
-			>
-				<Tooltip text="Delete">
-					<Trashbin />
-				</Tooltip>
-			</span>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div
+			on:pointerdown={(e) => e.stopPropagation()}
+			on:click={() => on_right()}
+			class="remove cursor-pointer w-1/6"
+		>
+			<Tooltip text="Move Right">
+				<RightArrow />
+			</Tooltip>
+		</div>
+
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div
+			on:pointerdown={(e) => e.stopPropagation()}
+			on:click={(item) => {
+				on_delete(item);
+				ws.close();
+			}}
+			class="remove cursor-pointer w-1/6"
+		>
+			<Tooltip text="Delete">
+				<Trashbin />
+			</Tooltip>
 		</div>
 	</div>
 

@@ -10,16 +10,21 @@
 	import { number_as_k } from '$lib/math';
 	import Trashbin from '$lib/assets/trashbin.svelte';
 	import Modal from './modal.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
 	import { get_exchange_endpoint, get_trade_subscription_string } from '$lib/exchange';
 	import type { Exchange } from '$lib/types';
 	import { TradeFeedHandler } from '$lib/trade_feed';
 	import { Tooltip } from 'svelte-tooltip-simple';
 	import ExchangeLogo from './exchange_logo.svelte';
+	import LeftArrow from '$lib/assets/left_arrow.svelte';
+	import RightArrow from '$lib/assets/right_arrow.svelte';
+	import { browser } from '$app/environment';
 
 	export let options: TFO;
 	export let on_delete: (item: any) => void;
+	export let on_left: () => void;
+	export let on_right: () => void;
 
 	let settings_modal_open = false;
 	let settings_state = false;
@@ -32,12 +37,6 @@
 		exchange: Exchange;
 		type: MarketType;
 		websocket: WebSocket;
-	};
-
-	const handle_update = (markets: Array<MarketInfo>) => {
-		settings_modal_open = false;
-		update_subscriptions(markets);
-		options.markets = markets;
 	};
 
 	const update_subscriptions = async (chosen: Array<MarketInfo>) => {
@@ -85,6 +84,14 @@
 	onMount(async () => {
 		update_subscriptions(options.markets);
 	});
+
+	onDestroy(async () => {
+		if (browser) {
+			connections.forEach((c) => {
+				c.websocket.close();
+			});
+		}
+	});
 </script>
 
 <div>
@@ -109,22 +116,41 @@
 	class="flex flex-col bg-red h-full max-h-screen overflow-y-auto no-scrollbar w-full"
 >
 	{#if settings_state}
-		<div class="flex bg-base-300 min-w-full">
+		<div class="flex flex-row bg-base-300 min-w-full">
+			<!-- <div class="w-1/4"></div> -->
+			<div class="flex flex-row justify-center w-4/5">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div
+					on:pointerdown={(e) => e.stopPropagation()}
+					on:click={() => on_left()}
+					class="remove cursor-pointer"
+				>
+					<Tooltip text="Move Left">
+						<LeftArrow />
+					</Tooltip>
+				</div>
+
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div
+					on:pointerdown={(e) => e.stopPropagation()}
+					on:click={() => on_right()}
+					class="remove cursor-pointer"
+				>
+					<Tooltip text="Move Right">
+						<RightArrow />
+					</Tooltip>
+				</div>
+			</div>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<span
+			<div
 				on:pointerdown={(e) => e.stopPropagation()}
-				on:click={(item) => {
-					on_delete(item);
-					connections.forEach((c) => {
-						c.websocket.close();
-					});
-				}}
-				class="remove cursor-pointer"
+				on:click={(item) => on_delete(item)}
+				class="remove cursor-pointer w-1/5"
 			>
 				<Tooltip text="Delete">
 					<Trashbin />
 				</Tooltip>
-			</span>
+			</div>
 		</div>
 	{/if}
 

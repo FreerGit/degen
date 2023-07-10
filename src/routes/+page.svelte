@@ -52,15 +52,53 @@
 			$layoutStore.trade_feeds = new_layout;
 		}
 	};
+
+	const swapElements = (
+		comps: (AbstractOrderBook | TradeFeedHandler)[],
+		idx1: number,
+		idx2: number
+	) => {
+		const moves_first_to_last = idx1 == -1 && idx2 == 0;
+		const moves_last_to_first = idx1 == comps.length;
+		if (!moves_first_to_last && !moves_last_to_first) {
+			// Do not shift the array in a circular manner
+			let temp = comps[idx1];
+			comps[idx1] = comps[idx2];
+			comps[idx2] = temp;
+		}
+	};
+
+	const move_comp_left = (comp: AbstractOrderBook | TradeFeedHandler) => {
+		const idx = component_list.findIndex((v) => Object.is(comp, v));
+		swapElements(component_list, idx - 1, idx);
+		component_list = component_list;
+	};
+
+	const move_comp_right = (comp: AbstractOrderBook | TradeFeedHandler) => {
+		const idx = component_list.findIndex((v) => Object.is(comp, v));
+		swapElements(component_list, idx + 1, idx);
+		component_list = component_list;
+	};
 </script>
 
 <main class="flex flex-row h-full space-x-2 px-1 justify-between bg-base-100">
 	{#each component_list as comp, index}
 		<div class="max-h-screen min-w-[150px] max-w-[20%] border overflow-y-auto no-scrollbar">
 			{#if comp instanceof AbstractOrderBook}
-				<OrderBook id={index} on_delete={() => remove_comp(comp)} order_book={comp} />
+				<OrderBook
+					id={index}
+					on_delete={() => remove_comp(comp)}
+					order_book={comp}
+					on_left={() => move_comp_left(comp)}
+					on_right={() => move_comp_right(comp)}
+				/>
 			{:else if comp instanceof TradeFeedHandler}
-				<TradeFeed options={comp.tfo} on_delete={() => remove_comp(comp)} />
+				<TradeFeed
+					options={comp.tfo}
+					on_delete={() => remove_comp(comp)}
+					on_left={() => move_comp_left(comp)}
+					on_right={() => move_comp_right(comp)}
+				/>
 			{/if}
 		</div>
 	{/each}
