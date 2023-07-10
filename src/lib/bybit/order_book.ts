@@ -2,8 +2,8 @@
 import { add_orderbook_pair_suffix, get_exchange_endpoint } from '$lib/exchange';
 import type { MarketInfo } from '$lib/markets/get_markets';
 import { AbstractOrderBook, type Level } from '$lib/order_book';
-import type { Delta, OrderBook, Payload, Snapshot } from '$lib/types';
 import { P, match } from 'ts-pattern';
+import type { Delta, OrderBook, Payload, Snapshot } from './types';
 
 class BybitBook extends AbstractOrderBook {
 	constructor(m: MarketInfo) {

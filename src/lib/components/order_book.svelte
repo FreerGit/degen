@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
-	export type OrderBookOptions = {
-		markets: Array<MarketInfo>;
+	export type OrderBookOption = {
+		type: Component;
+		markets: MarketInfo;
 	};
 </script>
 
@@ -9,7 +10,6 @@
 	import Trashbin from '$lib/assets/trashbin.svelte';
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { number_as_k } from '$lib/math';
-	import type { AbstractOrderBook } from '$lib/order_book';
 	import { onDestroy, onMount } from 'svelte';
 
 	import { Tooltip } from 'svelte-tooltip-simple';
@@ -17,14 +17,19 @@
 	import { browser } from '$app/environment';
 	import LeftArrow from '$lib/assets/left_arrow.svelte';
 	import RightArrow from '$lib/assets/right_arrow.svelte';
+	import type { Component } from '$lib/stores/layout';
+	import { new_orderbook_instance } from '$lib/exchange';
+	import type { AbstractOrderBook } from '$lib/order_book';
 
-	export let order_book: AbstractOrderBook;
+	export let option: OrderBookOption;
 	export let on_delete: (item: any) => void;
 	export let id: number;
 	export let on_left: () => void;
 	export let on_right: () => void;
 
 	let ws: WebSocket;
+	let order_book: AbstractOrderBook = new_orderbook_instance(option.markets);
+	console.log("ddxd33")
 
 	const scroll_to_center = () => {
 		const delta_element = document.getElementById(`mid-point-ob-${id}`);
@@ -35,7 +40,8 @@
 		});
 	};
 
-	onMount(async () => {
+	onMount(async () => {		
+		console.log("ddxd")
 		const endpoint = order_book.get_endpoint();
 		ws = new WebSocket(endpoint);
 
@@ -57,7 +63,7 @@
 <div class="flex flex-col bg-base-300 h-full w-full overflow-y-auto no-scrollbar">
 	<!-- Header -->
 	<div class="px-1 flex flex-row w-full">
-		<div class="flex w-2/6">
+		<div class="flex w-3/12  justify-center">
 			<div class="remove cursor-pointer">
 				<Tooltip text={order_book.market_info.type + ' ' + order_book.market_info.market}>
 					<ExchangeLogo exchange={order_book.market_info.exchange} />
@@ -69,7 +75,7 @@
 		<div
 			on:pointerdown={(e) => e.stopPropagation()}
 			on:click={() => on_left()}
-			class="remove cursor-pointer w-1/6"
+			class="remove cursor-pointer w-2/12 flex justify-center"
 		>
 			<Tooltip text="Move Left">
 				<LeftArrow />
@@ -79,7 +85,7 @@
 		<div
 			on:pointerdown={(e) => e.stopPropagation()}
 			on:click={() => scroll_to_center()}
-			class="remove cursor-pointer flex w-1/6"
+			class="remove cursor-pointer w-2/12 flex justify-center"
 		>
 			<Tooltip text="Scroll to middle">
 				<Center />
@@ -90,7 +96,7 @@
 		<div
 			on:pointerdown={(e) => e.stopPropagation()}
 			on:click={() => on_right()}
-			class="remove cursor-pointer w-1/6"
+			class="remove cursor-pointer w-2/12 flex justify-center"
 		>
 			<Tooltip text="Move Right">
 				<RightArrow />
@@ -104,7 +110,7 @@
 				on_delete(item);
 				ws.close();
 			}}
-			class="remove cursor-pointer w-1/6"
+			class="remove cursor-pointer w-3/12 flex justify-center"
 		>
 			<Tooltip text="Delete">
 				<Trashbin />

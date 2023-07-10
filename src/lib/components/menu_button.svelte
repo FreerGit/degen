@@ -23,20 +23,18 @@
 	const check_fullscreen = () => {
 		document.fullscreenElement ? (is_fullscreen = true) : (is_fullscreen = false);
 	};
-	let options = $layoutStore.trade_feeds;
+	// let options = $layoutStore.trade_feeds;
 	let button_style = 'flex min-w-full px-4 py-2 hover:bg-base-hover text-base-content';
 </script>
 
 <PickTradeFeedModal
 	bind:open={add_trade_feed_modal}
 	title="Choose markets for trade feed"
-	{options}
 	update={(m) => handle_panel(m, 'Trade')}
 />
 
 <PickOrderbookModal
 	bind:open={add_ob_modal}
-	{options}
 	title={'Choose order book'}
 	update={(m) => handle_panel([m], 'OB')}
 />

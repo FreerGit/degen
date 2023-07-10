@@ -1,16 +1,20 @@
 import { browser } from '$app/environment';
-import type { OrderBookOptions } from '$lib/components/order_book.svelte';
+import type { OrderBookOption } from '$lib/components/order_book.svelte';
 import type { TradeFeedOption } from '$lib/components/trade_feed.svelte';
 import { writable } from 'svelte/store';
 
+export const ComponentType = ['TF', 'OB'] as const;
+
+export type Component = (typeof ComponentType)[number];
+
 interface Layout {
-	trade_feeds: TradeFeedOption;
-	order_book: OrderBookOptions;
+	component: (TradeFeedOption | OrderBookOption)[];
 }
 
-let layout = {
-	trade_feeds: [
+let layout: Layout = {
+	component: [
 		{
+			type: 'TF',
 			min_size: 15000,
 			markets: [
 				{
@@ -24,18 +28,18 @@ let layout = {
 					market: 'BTCUSDT'
 				}
 			]
+		},
+		{
+			type: 'OB',
+			markets: 
+				{
+					exchange: 'Bybit',
+					type: 'linear',
+					market: 'BTCUSDT'
+				}
 		}
-	],
-	order_book: {
-		markets: [
-			{
-				exchange: 'Bybit',
-				type: 'linear',
-				market: 'BTCUSDT'
-			}
-		]
-	}
-} as Layout;
+	]
+};
 
 if (browser) {
 	const local = localStorage.getItem('layout');

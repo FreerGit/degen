@@ -8,7 +8,7 @@
 	export let title: string;
 	let display: Array<MarketInfo>;
 	let chosen: Array<MarketInfo> = [];
-	export let options: TradeFeedOption;
+	// export let options: TradeFeedOption;
 	export let update: (m: Array<MarketInfo>) => void;
 
 	let search_market = '';
@@ -41,7 +41,7 @@
 			}
 		}
 		display = found;
-		options.markets = found;
+		// options.markets = found;
 	};
 
 	const add_market = (info: MarketInfo) => {

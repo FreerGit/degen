@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
-	export type TradeFeedOption = Array<TFO>;
-	export type TFO = {
+	export type TradeFeedOption = {
+		type: Component;
 		min_size: number;
 		markets: Array<MarketInfo>;
 	};
@@ -20,8 +20,9 @@
 	import LeftArrow from '$lib/assets/left_arrow.svelte';
 	import RightArrow from '$lib/assets/right_arrow.svelte';
 	import { browser } from '$app/environment';
+	import type { Component } from '$lib/stores/layout';
 
-	export let options: TFO;
+	export let option: TradeFeedOption;
 	export let on_delete: (item: any) => void;
 	export let on_left: () => void;
 	export let on_right: () => void;
@@ -29,7 +30,7 @@
 	let settings_modal_open = false;
 	let settings_state = false;
 
-	let data_feed: TradeFeedHandler = new TradeFeedHandler(100, options);
+	let data_feed: TradeFeedHandler = new TradeFeedHandler(100, option);
 
 	let connections: Array<WebsockerPerEndpoint> = [];
 
@@ -75,14 +76,14 @@
 
 	const validate_number = (n: any) => {
 		if (isNumber(n.target.value)) {
-			options.min_size = n.target.value;
+			option.min_size = n.target.value;
 		} else {
-			options.min_size = 1;
+			option.min_size = 1;
 		}
 	};
 
 	onMount(async () => {
-		update_subscriptions(options.markets);
+		update_subscriptions(option.markets);
 	});
 
 	onDestroy(async () => {
@@ -101,7 +102,7 @@
 			<div class="pr-4">
 				<input
 					on:input={validate_number}
-					value={options.min_size}
+					value={option.min_size}
 					type="number"
 					class="input input-bordered input-success w-full max-w-xs bg-base-100 text-base-content border"
 				/>
