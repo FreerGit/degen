@@ -12,7 +12,11 @@
 	import Modal from './modal.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import type { MarketInfo, MarketType } from '$lib/markets/get_markets';
-	import { get_exchange_endpoint, get_trade_subscription_string } from '$lib/exchange';
+	import {
+		get_exchange_endpoint,
+		get_ping_string,
+		get_trade_subscription_string
+	} from '$lib/exchange';
 	import type { Exchange } from '$lib/types';
 	import { TradeFeedHandler } from '$lib/trade_feed';
 	import { Tooltip } from 'svelte-tooltip-simple';
@@ -21,6 +25,7 @@
 	import RightArrow from '$lib/assets/right_arrow.svelte';
 	import { browser } from '$app/environment';
 	import type { Component } from '$lib/stores/layout';
+	import { onInterval } from '$lib/utils';
 
 	export let option: TradeFeedOption;
 	export let on_delete: (item: any) => void;
@@ -81,6 +86,14 @@
 			option.min_size = 1;
 		}
 	};
+
+	onInterval(() => {
+		connections.forEach((c) => {
+			if (get_ping_string(c.exchange)?.length !== 0) {
+				c.websocket.send(get_ping_string(c.exchange));
+			}
+		});
+	}, 30_000);
 
 	onMount(async () => {
 		update_subscriptions(option.markets);

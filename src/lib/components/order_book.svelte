@@ -20,6 +20,7 @@
 	import type { Component } from '$lib/stores/layout';
 	import { new_orderbook_instance } from '$lib/exchange';
 	import type { AbstractOrderBook } from '$lib/order_book';
+	import { onInterval } from '$lib/utils';
 
 	export let option: OrderBookOption;
 	export let on_delete: (item: any) => void;
@@ -38,6 +39,12 @@
 			inline: 'center'
 		});
 	};
+
+	onInterval(() => {
+		if (order_book.get_ping_string().length !== 0) {
+			ws.send(order_book.get_ping_string());
+		}
+	}, 30_000);
 
 	onMount(async () => {
 		const endpoint = order_book.get_endpoint();

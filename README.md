@@ -7,11 +7,11 @@ colors based on difference from min - tresholds or only min size
 
 ## Next
 
-ctrl F for @TODO HERE
+spot market ws on bybit seem to close after 5 min, ping-pong?
+Automatic way to reconnect ws
+holy shit I need to optimize the code lmfaooooo
 
 ## Large
-
-- [ ] switch to v5 bybit api use exchange.ts
 
 - [ ] liq feed
 - [ ] options for liq feed

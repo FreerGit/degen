@@ -21,7 +21,7 @@ class BinanceBook extends AbstractOrderBook {
 	}
 
 	get_ping_string(): string {
-		return 'ping';
+		return '';
 	}
 
 	handle_message(message: string): void {

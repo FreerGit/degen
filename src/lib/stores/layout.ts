@@ -62,7 +62,7 @@ let layout: Layout = {
 					market: 'BTCUSDT'
 				}
 			]
-		},
+		}
 	]
 };
 

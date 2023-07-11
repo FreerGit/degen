@@ -22,7 +22,6 @@
 		$layoutStore.component = $layoutStore.component;
 	};
 
-	// @TODO deletes wrong one
 	const remove_comp = (item: TradeFeedOption | OrderBookOption) => {
 		let component_list = $layoutStore.component.filter((value) => value !== item);
 		$layoutStore.component = component_list;

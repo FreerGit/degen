@@ -23,7 +23,7 @@ class OKXBook extends AbstractOrderBook {
 	}
 
 	get_ping_string(): string {
-		return JSON.stringify({ op: 'ping' });
+		return 'ping';
 	}
 
 	handle_message(message: string): void {

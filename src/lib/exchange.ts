@@ -81,3 +81,14 @@ export const get_trade_subscription_string = (
 			return `{"op": "subscribe", "args": [${to_sub_array}]}`;
 	}
 };
+
+export const get_ping_string = (exchange: Exchange) => {
+	switch (exchange) {
+		case 'Bybit':
+			return JSON.stringify({ op: 'ping' });
+		case 'Binance':
+			return '';
+		case 'OKX':
+			return 'ping';
+	}
+};

@@ -49,7 +49,6 @@
 		class="absolute bottom-20 right-6 w-48 py-2 mt-1 bg-base-200 rounded shadow-md"
 		style="z-index: 1000;"
 	>
-		<!-- @TODO HERE, rewrite the modal and create pick_trade_feed_modal.... -->
 		<button
 			on:click={() => {
 				add_trade_feed_modal = true;
