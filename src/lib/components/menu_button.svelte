@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { MarketInfo } from '$lib/markets/get_markets';
-	import { layoutStore } from '$lib/stores/layout';
 	import type { PanelType } from '../../routes/+page.svelte';
 	import PickOrderbookModal from './pick_orderbook_modal.svelte';
 	import PickTradeFeedModal from './pick_trade_feed_modal.svelte';

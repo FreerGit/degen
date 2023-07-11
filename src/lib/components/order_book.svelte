@@ -29,7 +29,6 @@
 
 	let ws: WebSocket;
 	let order_book: AbstractOrderBook = new_orderbook_instance(option.markets);
-	console.log("ddxd33")
 
 	const scroll_to_center = () => {
 		const delta_element = document.getElementById(`mid-point-ob-${id}`);
@@ -40,8 +39,7 @@
 		});
 	};
 
-	onMount(async () => {		
-		console.log("ddxd")
+	onMount(async () => {
 		const endpoint = order_book.get_endpoint();
 		ws = new WebSocket(endpoint);
 
@@ -63,7 +61,7 @@
 <div class="flex flex-col bg-base-300 h-full w-full overflow-y-auto no-scrollbar">
 	<!-- Header -->
 	<div class="px-1 flex flex-row w-full">
-		<div class="flex w-3/12  justify-center">
+		<div class="flex w-3/12 justify-center">
 			<div class="remove cursor-pointer">
 				<Tooltip text={order_book.market_info.type + ' ' + order_book.market_info.market}>
 					<ExchangeLogo exchange={order_book.market_info.exchange} />

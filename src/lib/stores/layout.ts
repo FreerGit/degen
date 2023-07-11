@@ -31,12 +31,11 @@ let layout: Layout = {
 		},
 		{
 			type: 'OB',
-			markets: 
-				{
-					exchange: 'Bybit',
-					type: 'linear',
-					market: 'BTCUSDT'
-				}
+			markets: {
+				exchange: 'Bybit',
+				type: 'linear',
+				market: 'BTCUSDT'
+			}
 		}
 	]
 };

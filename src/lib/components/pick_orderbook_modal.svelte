@@ -2,13 +2,11 @@
 	import type { MarketInfo } from '$lib/markets/get_markets';
 	import { markets_store } from '$lib/stores/markets';
 	import { ExchangeValues } from '$lib/types';
-	import type { TradeFeedOption } from './trade_feed.svelte';
 
 	export let open: boolean;
 	export let title: string;
 	let display: Array<MarketInfo>;
 	let chosen: MarketInfo;
-	// export let options: TradeFeedOption;
 	export let update: (m: MarketInfo) => void;
 
 	let search_market = '';
@@ -33,7 +31,6 @@
 			}
 		}
 		display = found;
-		// options.markets = found;
 	};
 
 	$: searchable_exchanges && search_markets();
