@@ -14,6 +14,30 @@ interface Layout {
 let layout: Layout = {
 	component: [
 		{
+			type: 'OB',
+			markets: {
+				exchange: 'Bybit',
+				type: 'linear',
+				market: 'BTCUSDT'
+			}
+		},
+		{
+			type: 'OB',
+			markets: {
+				exchange: 'Bybit',
+				type: 'spot',
+				market: 'BTCUSDT'
+			}
+		},
+		{
+			type: 'OB',
+			markets: {
+				exchange: 'OKX',
+				type: 'spot',
+				market: 'BTC-USDT'
+			}
+		},
+		{
 			type: 'TF',
 			min_size: 15000,
 			markets: [
@@ -26,17 +50,19 @@ let layout: Layout = {
 					exchange: 'Binance',
 					type: 'linear',
 					market: 'BTCUSDT'
+				},
+				{
+					exchange: 'Bybit',
+					type: 'spot',
+					market: 'BTCUSDT'
+				},
+				{
+					exchange: 'Binance',
+					type: 'spot',
+					market: 'BTCUSDT'
 				}
 			]
 		},
-		{
-			type: 'OB',
-			markets: {
-				exchange: 'Bybit',
-				type: 'linear',
-				market: 'BTCUSDT'
-			}
-		}
 	]
 };
 
