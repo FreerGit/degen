@@ -149,13 +149,11 @@
 		{#each order_book.bids.toArray() as [price, size]}
 			<div class="flex flex-row w-full px-1 text-2xs text-base-content">
 				<div class="w-2/5">{price}</div>
-				<div>
-					<div
-						class="w-3/5 bg-primary text-base-content"
-						style="width: {(size / order_book.highest_vol_level) * 100}%;"
-					>
-						{size}
-					</div>
+				<div
+					class="w-3/5 bg-primary text-base-content"
+					style="width: {(size / order_book.highest_vol_level) * 60}%;"
+				>
+					{size}
 				</div>
 			</div>
 		{/each}
