@@ -27,8 +27,9 @@ class OKXBook extends AbstractOrderBook {
 	}
 
 	handle_message(message: string): void {
-		const json: Payload = JSON.parse(message);
-		match(json)
+		if (message !== "pong") {
+			const json: Payload = JSON.parse(message);
+			match(json)
 			.with({ action: 'update' }, () => {
 				this.update_delta((json as Delta).data[0]);
 			})
@@ -37,6 +38,7 @@ class OKXBook extends AbstractOrderBook {
 			})
 			.with({ event: P.string }, () => {})
 			.run();
+		}
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
